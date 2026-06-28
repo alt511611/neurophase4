@@ -165,7 +165,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
   <a href="#pricing" class="nav-cta mono">GET ACCESS →</a>
 </nav>
 
-<!-- HERO -->
 <header class="hero">
   <div class="hero-glow"></div>
   <div class="container">
@@ -182,7 +181,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
   </div>
 </header>
 
-<!-- HONESTY BANNER -->
 <div class="container">
   <div class="honesty-bar">
     <div class="honesty-icon">📋</div>
@@ -196,7 +194,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
 <main>
 
-  <!-- THE PROBLEM -->
   <section class="section">
     <div class="container-sm">
       <p class="section-tag">// THE PROBLEM</p>
@@ -210,7 +207,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- DEMO -->
   <section class="section" id="demo">
     <div class="container-sm">
       <p class="section-tag" style="text-align:center">// 90-SECOND SAMPLE</p>
@@ -245,7 +241,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
           <span id="currentTime" class="mono">0:00</span>
           <span class="mono">1:30</span>
         </div>
-        <!-- ⚠️ Replace with your actual demo audio URL -->
         <audio id="audioPlayer" preload="auto">
           <source src="https://www.image2url.com/r2/default/audio/1782657198887-58d8deab-0867-4965-89ef-167851b2fd2e.mp3" type="audio/mpeg">
         </audio>
@@ -256,7 +251,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- HOW IT WORKS -->
   <section class="section">
     <div class="container-sm">
       <p class="section-tag">// MECHANISM</p>
@@ -285,7 +279,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- WHAT YOU GET -->
   <section class="section">
     <div class="container-sm">
       <p class="section-tag">// WHAT'S INCLUDED</p>
@@ -313,7 +306,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- PRICING -->
   <section class="section" id="pricing">
     <div class="container-sm">
       <p class="section-tag" style="text-align:center">// ACCESS</p>
@@ -367,7 +359,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- FAQ -->
   <section class="section">
     <div class="container-sm">
       <p class="section-tag">// QUESTIONS</p>
@@ -395,7 +386,6 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   <div class="divider"></div>
 
-  <!-- FINAL CTA -->
   <section class="section">
     <div class="container-sm">
       <div class="final-cta">
@@ -429,17 +419,16 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
   var currentTimeEl=document.getElementById('currentTime');
   var isPlaying=false,simInterval,simProgress=0;
 
+  // Modern browser policy handler for image2url audio stream
   function toggleAudio(){
-    // Linkin içinde mp3 var mı diye bakar, gerçek ses olduğunu doğrular
-    var hasReal = audio.src && audio.src.includes('.mp3');
+    var hasReal=audio.src&&audio.src.includes('.mp3')&&!audio.src.includes('YOUR_DEMO_AUDIO');
     
-    if(isPlaying) {
+    if(isPlaying){
       audio.pause();
     } else {
-      if(hasReal) {
-        // Tarayıcıların "Kullanıcı izinsiz ses çalamazsın" hatasını yakalar ve çözer
+      if(hasReal){
         audio.play().catch(function(error) {
-          console.log("Playback prevented by browser. Trying again...", error);
+          console.log("Audio playback delayed or prevented by browser infrastructure security context.", error);
         });
       }
     }
@@ -450,12 +439,13 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
     
     if(isPlaying){
       waveform.classList.add('playing');
-      if(!hasReal) startSim();
+      if(!hasReal)startSim();
     } else {
       waveform.classList.remove('playing');
       clearInterval(simInterval);
     }
   }
+
   function startSim(){
     clearInterval(simInterval);
     simInterval=setInterval(function(){
@@ -474,9 +464,11 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
   }
 
   audio.addEventListener('timeupdate',function(){
-    progressFill.style.width=(audio.currentTime/audio.duration*100)+'%';
-    var m=Math.floor(audio.currentTime/60),s=Math.floor(audio.currentTime%60);
-    currentTimeEl.textContent=m+':'+(s<10?'0':'')+s;
+    if(audio.duration) {
+      progressFill.style.width=(audio.currentTime/audio.duration*100)+'%';
+      var m=Math.floor(audio.currentTime/60),s=Math.floor(audio.currentTime%60);
+      currentTimeEl.textContent=m+':'+(s<10?'0':'')+s;
+    }
   });
 
   audio.addEventListener('ended',function(){
@@ -487,7 +479,7 @@ footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align
 
   function seekAudio(e,el){
     var pct=(e.clientX-el.getBoundingClientRect().left)/el.offsetWidth;
-    if(audio.src&&!audio.src.includes('YOUR_DEMO')){audio.currentTime=pct*audio.duration;}
+    if(audio.src&&!audio.src.includes('YOUR_DEMO')&&audio.duration){audio.currentTime=pct*audio.duration;}
     else{simProgress=pct*100;}
   }
 
