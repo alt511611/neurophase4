@@ -4,490 +4,567 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neurophase 4 — Acoustic Focus Protocol</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- Whop Embedded Checkout loader -->
+<script async defer src="https://js.whop.com/static/checkout/loader.js"></script>
+
+<!-- Meta Pixel — replace YOUR_PIXEL_ID with your real Pixel ID -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1548230000000834');
+fbq('track', 'PageView');
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
-body{font-family:'Inter',sans-serif;background:#020613;color:#e5e7eb;line-height:1.6}
-.mono{font-family:'JetBrains Mono',monospace}
-a{text-decoration:none;color:inherit}
+  :root{
+    --bg: #14110d;
+    --bg-alt: #1c1712;
+    --bg-card: #201a14;
+    --line: #372e23;
+    --text: #efe8db;
+    --muted: #a89a86;
+    --muted2: #7c7062;
+    --accent: #d4a54a;
+    --accent-dim: #8a6d33;
+    --accent-soft: rgba(212,165,74,0.12);
+    --good: #6fae8a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Source Sans 3', sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono', monospace;}
+  .display{font-family:'Space Grotesk', sans-serif;}
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;max-width:100%;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    display:flex;align-items:center;gap:10px;
+    margin-bottom:14px;
+  }
+  .eyebrow::before{content:'';width:18px;height:1px;background:var(--accent-dim);}
+  section{padding:96px 0;}
+  @media(max-width:640px){section{padding:64px 0;}}
 
-.container{max-width:960px;margin:0 auto;padding:0 24px}
-.container-sm{max-width:760px;margin:0 auto;padding:0 24px}
+  /* NAV */
+  header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(20,17,13,0.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    max-width:1080px;margin:0 auto;padding:16px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .logo{font-family:'Space Grotesk';font-weight:700;font-size:16px;letter-spacing:0.02em;}
+  .logo span{color:var(--accent);}
+  .nav-cta{
+    font-family:'JetBrains Mono';font-size:12px;letter-spacing:0.06em;
+    border:1px solid var(--accent-dim);color:var(--accent);
+    padding:9px 16px;border-radius:2px;transition:all .2s;
+  }
+  .nav-cta:hover{background:var(--accent);color:#14110d;}
 
-/* NAV */
-nav{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;max-width:1000px;margin:0 auto}
-.logo{font-weight:900;font-size:18px;letter-spacing:-0.05em;color:#fff}
-.logo span{color:#ef4444}
-.nav-cta{font-family:'JetBrains Mono',monospace;font-size:11px;color:#9ca3af;border:1px solid #1f2937;padding:8px 16px;border-radius:6px;transition:all 0.2s}
-.nav-cta:hover{color:#f87171;border-color:rgba(127,29,29,0.6)}
+  /* WAVEFORM SIGNATURE */
+  .wave-wrap{position:relative;width:100%;height:120px;overflow:hidden;opacity:0.55;}
+  .wave-wrap svg{position:absolute;top:0;left:0;width:200%;height:100%;}
+  .wave-a{animation:driftA 14s linear infinite;}
+  .wave-b{animation:driftB 18s linear infinite;}
+  @keyframes driftA{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @keyframes driftB{from{transform:translateX(-50%);}to{transform:translateX(0);}}
+  @media (prefers-reduced-motion: reduce){
+    .wave-a,.wave-b{animation:none;}
+  }
 
-/* HERO */
-.hero{text-align:center;padding:60px 24px 72px;position:relative;overflow:hidden}
-.hero-glow{position:absolute;top:0;left:50%;transform:translateX(-50%);width:600px;height:280px;background:radial-gradient(ellipse,rgba(239,68,68,0.1) 0%,transparent 70%);pointer-events:none}
-.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(69,10,10,0.4);border:1px solid rgba(127,29,29,0.5);color:#f87171;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:24px;font-family:'JetBrains Mono',monospace}
-.badge-dot{width:6px;height:6px;border-radius:50%;background:#ef4444;animation:ping 1.5s ease-in-out infinite}
-@keyframes ping{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.5)}}
-h1{font-size:clamp(34px,6.5vw,64px);font-weight:900;text-transform:uppercase;line-height:1;color:#fff;margin-bottom:20px;letter-spacing:-0.03em}
-.gradient-text{background:linear-gradient(135deg,#ef4444,#fb923c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.hero-desc{font-size:clamp(15px,2vw,17px);color:#9ca3af;max-width:620px;margin:0 auto 32px;line-height:1.75}
-.hero-desc strong{color:#e5e7eb}
-.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
-.btn-primary{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;padding:16px 32px;border-radius:10px;font-size:13px;transition:all 0.2s;animation:glow 2s ease-in-out infinite;border:none;cursor:pointer}
-.btn-primary:hover{background:linear-gradient(135deg,#ef4444,#f97316);transform:translateY(-2px)}
-@keyframes glow{0%,100%{box-shadow:0 0 20px rgba(239,68,68,0.25)}50%{box-shadow:0 0 40px rgba(239,68,68,0.55)}}
-.btn-secondary{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #1f2937;color:#9ca3af;font-weight:700;font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;padding:16px 28px;border-radius:10px;font-size:12px;transition:all 0.2s}
-.btn-secondary:hover{border-color:rgba(127,29,29,0.5);color:#e5e7eb}
-.hero-note{font-size:11px;color:#4b5563;font-family:'JetBrains Mono',monospace}
+  /* HERO */
+  .hero{padding-top:72px;padding-bottom:64px;position:relative;}
+  h1{
+    font-family:'Space Grotesk';font-weight:700;
+    font-size:clamp(34px,5.4vw,58px);
+    line-height:1.06;letter-spacing:-0.01em;
+    max-width:820px;
+  }
+  h1 em{font-style:normal;color:var(--accent);}
+  .lede{
+    margin-top:22px;font-size:18px;color:var(--muted);max-width:600px;
+  }
+  .lede strong{color:var(--text);font-weight:600;}
+  .cta-row{margin-top:34px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;}
+  .btn-primary{
+    font-family:'Space Grotesk';font-weight:600;font-size:16px;
+    background:var(--accent);color:#14110d;
+    padding:16px 28px;border-radius:3px;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:transform .15s, box-shadow .15s;
+    box-shadow:0 0 0 rgba(212,165,74,0);
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,165,74,0.25);}
+  .btn-ghost{
+    font-family:'JetBrains Mono';font-size:13px;color:var(--muted);
+    border:1px solid var(--line);padding:15px 20px;border-radius:3px;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-ghost:hover{border-color:var(--accent-dim);color:var(--text);}
+  .trust-line{
+    margin-top:22px;font-family:'JetBrains Mono';font-size:12.5px;color:var(--muted2);
+    display:flex;flex-wrap:wrap;gap:18px;
+  }
+  .trust-line span{display:flex;align-items:center;gap:6px;}
+  .trust-line svg{width:14px;height:14px;flex:none;}
 
-/* HONESTY BANNER */
-.honesty-bar{background:#070b14;border:1px solid #1f2937;border-radius:12px;padding:16px 24px;margin:0 auto 64px;max-width:680px;display:flex;gap:14px;align-items:flex-start}
-.honesty-icon{font-size:20px;flex-shrink:0;margin-top:2px}
-.honesty-text{font-size:13px;color:#9ca3af;line-height:1.7}
-.honesty-text strong{color:#e5e7eb}
+  /* PROBLEM */
+  .problem{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .problem h2{font-family:'Space Grotesk';font-size:clamp(26px,3.6vw,36px);font-weight:600;max-width:640px;line-height:1.2;}
+  .problem p{margin-top:20px;color:var(--muted);max-width:640px;font-size:16.5px;}
+  .stat-strip{
+    margin-top:36px;display:flex;gap:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  }
+  .stat{flex:1;padding:20px 22px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'JetBrains Mono';font-size:26px;color:var(--accent);font-weight:600;}
+  .stat .label{font-size:12.5px;color:var(--muted2);margin-top:4px;}
+  @media(max-width:640px){.stat-strip{flex-direction:column;}.stat{border-right:none;border-bottom:1px solid var(--line);}.stat:last-child{border-bottom:none;}}
 
-/* SECTIONS */
-.section{padding:64px 0}
-.section-tag{font-size:11px;color:#ef4444;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:14px}
-.section-title{font-size:clamp(24px,3.5vw,36px);font-weight:900;text-transform:uppercase;letter-spacing:-0.02em;color:#fff;margin-bottom:20px}
-.section-title .red{color:#ef4444}
-.body-text{color:#9ca3af;font-size:14px;line-height:1.85}
-.body-text strong{color:#e5e7eb}
-.body-text p+p{margin-top:16px}
+  /* DEMO */
+  .demo-card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:6px;
+    padding:32px;margin-top:28px;
+  }
+  .demo-card .label-row{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;}
+  .demo-card .title{font-family:'Space Grotesk';font-weight:600;font-size:18px;}
+  .demo-card .meta{font-family:'JetBrains Mono';font-size:12px;color:var(--muted2);}
+  audio{width:100%;margin-top:18px;accent-color:var(--accent);}
 
-/* DEMO PLAYER */
-.demo-player{background:#070b14;border:1px solid #1f2937;border-radius:18px;padding:28px;max-width:620px;margin:0 auto}
-.player-header{display:flex;align-items:center;gap:18px;margin-bottom:22px}
-.play-btn{width:52px;height:52px;flex-shrink:0;border-radius:50%;background:#dc2626;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;color:#fff}
-.play-btn:hover{background:#ef4444;transform:scale(1.06)}
-.play-btn svg{width:22px;height:22px;fill:currentColor}
-.player-title{font-weight:700;color:#fff;font-size:14px;margin-bottom:3px}
-.player-sub{font-size:11px;color:#6b7280;font-family:'JetBrains Mono',monospace}
-.waveform{display:flex;align-items:flex-end;justify-content:center;gap:3px;height:44px;margin-bottom:14px}
-.bar{width:4px;border-radius:2px;background:rgba(220,38,38,0.5);transform-origin:bottom}
-.bar:nth-child(odd){background:rgba(239,68,68,0.6)}
-.bar:nth-child(3n){background:rgba(251,146,60,0.7)}
-.waveform.playing .bar{animation:wave 1.2s ease-in-out infinite}
-.waveform.playing .bar:nth-child(2){animation-delay:.1s}.waveform.playing .bar:nth-child(3){animation-delay:.25s}
-.waveform.playing .bar:nth-child(4){animation-delay:.4s}.waveform.playing .bar:nth-child(5){animation-delay:.55s}
-.waveform.playing .bar:nth-child(6){animation-delay:.3s}.waveform.playing .bar:nth-child(7){animation-delay:.15s}
-.waveform.playing .bar:nth-child(8){animation-delay:.45s}.waveform.playing .bar:nth-child(9){animation-delay:.05s}
-.waveform.playing .bar:nth-child(10){animation-delay:.5s}.waveform.playing .bar:nth-child(11){animation-delay:.2s}
-.waveform.playing .bar:nth-child(12){animation-delay:.35s}.waveform.playing .bar:nth-child(13){animation-delay:.6s}
-.waveform.playing .bar:nth-child(14){animation-delay:.08s}.waveform.playing .bar:nth-child(15){animation-delay:.42s}
-.waveform.playing .bar:nth-child(16){animation-delay:.28s}.waveform.playing .bar:nth-child(17){animation-delay:.53s}
-.waveform.playing .bar:nth-child(18){animation-delay:.18s}.waveform.playing .bar:nth-child(19){animation-delay:.38s}
-.waveform.playing .bar:nth-child(20){animation-delay:.62s}
-@keyframes wave{0%,100%{transform:scaleY(0.2)}50%{transform:scaleY(1)}}
-.progress-track{width:100%;background:#111827;border-radius:999px;height:3px;margin-bottom:8px;cursor:pointer}
-.progress-fill{height:3px;border-radius:999px;background:linear-gradient(90deg,#dc2626,#f97316);width:0%;transition:width 0.5s linear}
-.progress-times{display:flex;justify-content:space-between;font-size:10px;color:#6b7280;font-family:'JetBrains Mono',monospace}
-.demo-note{text-align:center;font-size:11px;color:#4b5563;font-family:'JetBrains Mono',monospace;margin-top:18px}
+  /* MECHANISM */
+  .mech-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin-top:40px;}
+  @media(max-width:720px){.mech-grid{grid-template-columns:1fr;}}
+  .mech-card{background:var(--bg);padding:32px;}
+  .mech-card .idx{font-family:'JetBrains Mono';font-size:13px;color:var(--accent-dim);}
+  .mech-card h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;margin-top:10px;}
+  .mech-card p{margin-top:12px;color:var(--muted);font-size:15px;}
+  .honest-note{
+    margin-top:28px;padding:20px 22px;border-left:2px solid var(--accent-dim);
+    background:var(--accent-soft);border-radius:0 4px 4px 0;font-size:14.5px;color:var(--muted);
+  }
+  .honest-note strong{color:var(--text);}
 
-/* WHAT YOU GET */
-.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
-.feature-card{display:flex;gap:14px;padding:20px;background:#070b14;border:1px solid #111827;border-radius:12px}
-.feature-icon{color:#ef4444;font-size:16px;margin-top:3px;flex-shrink:0}
-.feature-title{font-weight:700;color:#fff;font-size:13px;margin-bottom:5px}
-.feature-desc{font-size:12px;color:#6b7280;line-height:1.7}
+  /* INCLUDED */
+  .inc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:36px;}
+  @media(max-width:640px){.inc-grid{grid-template-columns:1fr;}}
+  .inc-item{border:1px solid var(--line);padding:24px;border-radius:5px;background:var(--bg-alt);}
+  .inc-item .mark{color:var(--accent);font-size:18px;}
+  .inc-item h4{font-family:'Space Grotesk';font-size:16px;font-weight:600;margin-top:10px;}
+  .inc-item p{margin-top:8px;color:var(--muted);font-size:14.5px;}
 
-/* MECHANISM */
-.steps{display:flex;flex-direction:column;gap:20px}
-.step{display:flex;gap:20px;align-items:flex-start}
-.step-num{width:30px;height:30px;flex-shrink:0;border-radius:50%;border:1px solid rgba(127,29,29,0.5);background:rgba(69,10,10,0.3);display:flex;align-items:center;justify-content:center;color:#ef4444;font-weight:900;font-size:12px;font-family:'JetBrains Mono',monospace}
-.step-title{font-weight:700;color:#fff;font-size:13px;margin-bottom:5px}
-.step-desc{font-size:13px;color:#6b7280;line-height:1.7}
+  /* PRICING / CHECKOUT */
+  .pricing{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .price-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-top:40px;align-items:start;}
+  @media(max-width:800px){.price-grid{grid-template-columns:1fr;}}
+  .price-card{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;
+  }
+  .price-card.main{border-color:var(--accent-dim);box-shadow:0 0 0 1px var(--accent-dim);}
+  .price-card .tag{
+    font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+    color:var(--accent);border:1px solid var(--accent-dim);display:inline-block;padding:4px 10px;border-radius:20px;
+  }
+  .price-card h3{font-family:'Space Grotesk';font-size:22px;font-weight:600;margin-top:16px;}
+  .price-card ul{margin-top:16px;list-style:none;}
+  .price-card li{
+    font-size:14.5px;color:var(--muted);padding:7px 0;display:flex;gap:10px;align-items:flex-start;
+    border-bottom:1px solid var(--line);
+  }
+  .price-card li:last-child{border-bottom:none;}
+  .price-card li svg{width:14px;height:14px;color:var(--good);flex:none;margin-top:3px;}
+  .price-tag{margin-top:22px;font-family:'Space Grotesk';font-size:32px;font-weight:700;}
+  .price-tag small{font-family:'JetBrains Mono';font-size:13px;color:var(--muted2);font-weight:400;}
+  .price-note{margin-top:6px;font-size:13px;color:var(--muted2);}
+  .checkout-embed{
+    margin-top:22px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;
+    min-height:64px;
+  }
+  .guarantee-inline{
+    margin-top:18px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
+  }
+  .guarantee-inline svg{width:16px;height:16px;color:var(--accent);flex:none;}
 
-/* PRICING */
-.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:720px;margin:0 auto}
-.pricing-card{padding:28px;border-radius:18px;display:flex;flex-direction:column;justify-content:space-between}
-.pricing-card.featured{background:linear-gradient(180deg,rgba(69,10,10,0.2) 0%,#070b14 100%);border:1px solid rgba(127,29,29,0.45);position:relative}
-.pricing-card.standard{background:#070b14;border:1px solid #111827}
-.rec-badge{position:absolute;top:14px;right:14px;font-size:10px;font-family:'JetBrains Mono',monospace;background:#dc2626;color:#fff;padding:2px 9px;border-radius:999px;text-transform:uppercase;letter-spacing:0.08em}
-.plan-tag{font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px}
-.plan-tag.red{color:#f87171}
-.plan-tag.gray{color:#6b7280}
-.plan-title{font-size:18px;font-weight:900;text-transform:uppercase;color:#fff;margin-bottom:14px;line-height:1.2}
-.plan-features{list-style:none;margin-bottom:20px}
-.plan-features li{font-size:12px;color:#9ca3af;padding:4px 0;display:flex;gap:8px;line-height:1.6}
-.check-red{color:#ef4444}
-.check-dim{color:#374151}
-.price-row{display:flex;align-items:baseline;gap:8px;margin-bottom:18px}
-.price-big{font-size:40px;font-weight:900;color:#fff}
-.price-period{font-size:10px;color:#6b7280;font-family:'JetBrains Mono',monospace;text-transform:uppercase}
-.guarantee-box{display:flex;gap:14px;align-items:flex-start;padding:18px 20px;background:#070b14;border:1px solid rgba(31,41,55,0.5);border-radius:12px;margin-top:20px;max-width:720px;margin-left:auto;margin-right:auto}
-.guarantee-icon{font-size:26px;flex-shrink:0}
-.guarantee-title{font-weight:700;color:#fff;font-size:13px;margin-bottom:3px}
-.guarantee-desc{font-size:12px;color:#9ca3af;line-height:1.65}
+  /* GUARANTEE BANNER */
+  .guarantee-block{
+    display:flex;gap:24px;align-items:flex-start;
+    background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;margin-top:64px;
+  }
+  @media(max-width:640px){.guarantee-block{flex-direction:column;}}
+  .guarantee-block svg{width:40px;height:40px;color:var(--accent);flex:none;}
+  .guarantee-block h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;}
+  .guarantee-block p{margin-top:8px;color:var(--muted);font-size:15px;}
 
-/* FAQ */
-.faq-list{display:flex;flex-direction:column;gap:8px}
-.faq-item{background:#070b14;border:1px solid #111827;border-radius:12px;overflow:hidden;cursor:pointer}
-.faq-q{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:12px}
-.faq-q span{font-weight:700;color:#fff;font-size:13px}
-.faq-arrow{transition:transform 0.3s;color:#6b7280;flex-shrink:0}
-.faq-item.open .faq-arrow{transform:rotate(180deg)}
-.faq-ans{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
-.faq-item.open .faq-ans{max-height:200px}
-.faq-ans p{padding:0 20px 16px;font-size:13px;color:#9ca3af;line-height:1.7}
+  /* FAQ */
+  .faq-item{border-bottom:1px solid var(--line);padding:22px 0;}
+  .faq-q{
+    display:flex;justify-content:space-between;align-items:center;cursor:pointer;
+    font-family:'Space Grotesk';font-size:16.5px;font-weight:500;
+  }
+  .faq-q .plus{font-family:'JetBrains Mono';color:var(--accent);transition:transform .2s;}
+  .faq-item.open .plus{transform:rotate(45deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .faq-a p{padding-top:14px;color:var(--muted);font-size:15px;max-width:680px;}
+  .faq-item.open .faq-a{max-height:300px;}
 
-/* FINAL CTA */
-.final-cta{text-align:center;padding:56px 24px;background:linear-gradient(180deg,rgba(69,10,10,0.12) 0%,#070b14 100%);border:1px solid rgba(127,29,29,0.3);border-radius:18px}
-.final-cta h2{font-size:clamp(22px,3.5vw,34px);font-weight:900;text-transform:uppercase;color:#fff;margin-bottom:14px}
-.final-cta p{color:#9ca3af;font-size:14px;max-width:460px;margin:0 auto 28px;line-height:1.7}
-.final-note{font-size:11px;color:#4b5563;font-family:'JetBrains Mono',monospace;margin-top:12px}
+  /* FINAL CTA */
+  .final{text-align:center;padding:100px 0;}
+  .final h2{font-family:'Space Grotesk';font-size:clamp(28px,4vw,40px);font-weight:600;max-width:600px;margin:0 auto;}
+  .final .btn-primary{margin-top:30px;font-size:17px;padding:18px 32px;}
+  .final .trust-line{justify-content:center;margin-top:24px;}
 
-/* FOOTER */
-footer{background:#000;border-top:1px solid #0d1117;padding:44px 24px;text-align:center}
-.footer-logo{font-weight:900;font-size:15px;letter-spacing:-0.04em;color:#6b7280;margin-bottom:14px}
-.footer-logo span{color:#7f1d1d}
-.footer-disc{font-size:11px;color:#374151;line-height:1.7;max-width:680px;margin:0 auto 14px}
-.footer-disc strong{color:#4b5563}
-.footer-links{display:flex;justify-content:center;gap:20px;margin-bottom:14px}
-.footer-links a{font-size:10px;color:#374151;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:0.07em;transition:color 0.2s}
-.footer-links a:hover{color:#f87171}
-.footer-copy{font-size:10px;color:#1f2937;font-family:'JetBrains Mono',monospace}
+  footer{border-top:1px solid var(--line);padding:48px 0;background:var(--bg-alt);}
+  .disclaimer{font-size:12.5px;color:var(--muted2);max-width:720px;line-height:1.7;}
+  .foot-links{margin-top:20px;display:flex;gap:20px;font-family:'JetBrains Mono';font-size:12px;color:var(--muted);flex-wrap:wrap;}
+  .foot-links a:hover{color:var(--accent);}
+  .copyright{margin-top:20px;font-size:12px;color:var(--muted2);}
 
-/* DIVIDER */
-.divider{height:1px;background:linear-gradient(90deg,transparent,#1f2937,transparent);margin:0 24px}
-
-@media(max-width:580px){
-  .hero-btns{flex-direction:column;align-items:center}
-  .btn-primary,.btn-secondary{width:100%;max-width:300px}
-  .pricing-grid{grid-template-columns:1fr}
-}
+  /* sticky mobile cta */
+  .sticky-cta{
+    position:fixed;bottom:0;left:0;right:0;z-index:60;
+    background:rgba(20,17,13,0.95);backdrop-filter:blur(10px);
+    border-top:1px solid var(--line);padding:12px 16px;
+    display:none;align-items:center;justify-content:space-between;gap:12px;
+  }
+  .sticky-cta .btn-primary{padding:12px 20px;font-size:14px;white-space:nowrap;}
+  @media(max-width:720px){.sticky-cta{display:flex;}body{padding-bottom:74px;}}
 </style>
 </head>
 <body>
 
-<nav>
-  <span class="logo">NEUROPHASE<span>4</span></span>
-  <a href="#pricing" class="nav-cta mono">GET ACCESS →</a>
-</nav>
-
-<header class="hero">
-  <div class="hero-glow"></div>
-  <div class="container">
-    <div class="badge"><span class="badge-dot"></span>Acoustic Cognitive Protocol — v4.1</div>
-    <h1>Your Brain Is<br><span class="gradient-text">Being Hijacked.</span></h1>
-    <p class="hero-desc">
-      Every notification, every ambient sound, every open tab is pulling your prefrontal cortex away from deep work. Neurophase 4 is a <strong>precision-engineered audio file</strong> that uses two acoustic mechanisms to force your brain into a sustained focus state — no stimulants, no subscriptions.
-    </p>
-    <div class="hero-btns">
-      <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4" class="btn-primary mono">ACTIVATE PROTOCOL — $37.00</a>
-      <a href="#demo" class="btn-secondary mono">▶ HEAR 90-SEC SAMPLE</a>
-    </div>
-    <p class="hero-note mono">Instant delivery. One-time payment. 30-day refund guarantee.</p>
-  </div>
+<header>
+  <nav>
+    <div class="logo">NEUROPHASE<span>4</span></div>
+    <a href="#pricing" class="nav-cta">GET THE PROTOCOL</a>
+  </nav>
 </header>
 
-<div class="container">
-  <div class="honesty-bar">
-    <div class="honesty-icon">📋</div>
-    <div class="honesty-text">
-      <strong>What this is, exactly:</strong> A 6-minute audio file (WAV + MP3) containing layered 40Hz binaural frequencies and broadband masking noise. Synthesized using AI audio tools. It comes with a PDF guide on how to use it correctly. No miraculous claims — just a tool that works when used as directed. If it doesn't work for you, you get a full refund.
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Acoustic Cognitive Protocol — v4.1</div>
+    <h1>Your focus isn't broken. <em>Your environment is.</em></h1>
+    <p class="lede">
+      Every notification, every background voice, every open tab pulls your prefrontal cortex
+      out of deep work. Neurophase 4 is an audio file, precision-built with two layered acoustic
+      mechanisms to guide your mind into a sustainable focus state — <strong>no stimulants, no subscription.</strong>
+    </p>
+    <div class="cta-row">
+      <a href="#pricing" class="btn-primary">
+        Get The Protocol — $37
+      </a>
+      <a href="#demo" class="btn-ghost">▶ Listen to the 90-sec sample</a>
+    </div>
+    <div class="trust-line">
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 4v6c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6l7-4z"/></svg> Secure checkout — powered by Whop</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l6 6 12-12"/></svg> Instant delivery</span>
+      <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg> 30-day no-questions refund</span>
     </div>
   </div>
-</div>
+  <div class="wave-wrap" aria-hidden="true">
+    <svg class="wave-a" viewBox="0 0 1600 120" preserveAspectRatio="none"><path d="M0,60 C100,10 200,110 300,60 C400,10 500,110 600,60 C700,10 800,110 900,60 C1000,10 1100,110 1200,60 C1300,10 1400,110 1500,60 C1550,40 1600,80 1600,60" stroke="#8a6d33" stroke-width="1.5" fill="none"/></svg>
+    <svg class="wave-b" viewBox="0 0 1600 120" preserveAspectRatio="none"><path d="M0,60 C100,90 200,30 300,60 C400,90 500,30 600,60 C700,90 800,30 900,60 C1000,90 1100,30 1200,60 C1300,90 1400,30 1500,60 C1550,70 1600,50 1600,60" stroke="#d4a54a" stroke-width="1.5" fill="none"/></svg>
+  </div>
+</section>
 
-<div class="divider"></div>
-
-<main>
-
-  <section class="section">
-    <div class="container-sm">
-      <p class="section-tag">// THE PROBLEM</p>
-      <h2 class="section-title">You're Not Lazy.<br>Your Environment Is <span class="red">Broken.</span></h2>
-      <div class="body-text">
-        <p>The average knowledge worker loses 23 minutes of productive time after every single distraction. Office noise, phone alerts, background conversations — each one triggers an involuntary orientation response in your brain that takes nearly half an hour to fully recover from.</p>
-        <p>This isn't a willpower problem. It's an acoustics problem. <strong>Neurophase 4 solves it at the source.</strong></p>
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="wrap">
+    <div class="eyebrow">The Problem</div>
+    <h2>You're not undisciplined. Your surroundings just aren't built for focus.</h2>
+    <p>
+      The average knowledge worker loses roughly 23 minutes of productive time after every interruption.
+      Office noise, phone notifications, background conversation — each one triggers an involuntary
+      orienting response, and fully recovering from it takes far longer than the interruption itself.
+      This isn't a willpower problem. It's an acoustic one.
+    </p>
+    <div class="stat-strip">
+      <div class="stat">
+        <div class="num mono">2</div>
+        <div class="label">Acoustic mechanisms layered into the file</div>
+      </div>
+      <div class="stat">
+        <div class="num mono">6:00</div>
+        <div class="label">Minutes — the seamless looping core track</div>
+      </div>
+      <div class="stat">
+        <div class="num mono">30</div>
+        <div class="label">Days — no-questions refund window</div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"></div>
+<!-- DEMO -->
+<section id="demo">
+  <div class="wrap">
+    <div class="eyebrow">90-Second Sample</div>
+    <h2 class="display" style="font-size:clamp(24px,3.2vw,32px);font-weight:600;">Listen before you buy</h2>
+    <div class="demo-card">
+      <div class="label-row">
+        <div class="title">Cortical Resonance — Focus Mode (Preview)</div>
+        <div class="meta">90-sec sample · headphones recommended</div>
+      </div>
+      <audio controls src="demo.mp3"></audio>
+      <div class="meta" style="margin-top:14px;">The full 6-minute loop is included with purchase · works best with stereo headphones</div>
+    </div>
+  </div>
+</section>
 
-  <section class="section" id="demo">
-    <div class="container-sm">
-      <p class="section-tag" style="text-align:center">// 90-SECOND SAMPLE</p>
-      <h2 class="section-title" style="text-align:center;margin-bottom:32px">Listen Before You Buy</h2>
-      <div class="demo-player">
-        <div class="player-header">
-          <button class="play-btn" id="playBtn" onclick="toggleAudio()">
-            <svg id="playIcon" viewBox="0 0 24 24" style="transform:translateX(2px)"><path d="M8 5v14l11-7z"/></svg>
-            <svg id="pauseIcon" viewBox="0 0 24 24" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-          </button>
-          <div>
-            <div class="player-title">Cortical Resonance — Focus Mode (Preview)</div>
-            <div class="player-sub mono">90-sec sample · headphones recommended</div>
-          </div>
-        </div>
-        <div class="waveform" id="waveform">
-          <div class="bar" style="height:30%"></div><div class="bar" style="height:55%"></div>
-          <div class="bar" style="height:42%"></div><div class="bar" style="height:78%"></div>
-          <div class="bar" style="height:50%"></div><div class="bar" style="height:35%"></div>
-          <div class="bar" style="height:68%"></div><div class="bar" style="height:45%"></div>
-          <div class="bar" style="height:88%"></div><div class="bar" style="height:40%"></div>
-          <div class="bar" style="height:62%"></div><div class="bar" style="height:72%"></div>
-          <div class="bar" style="height:38%"></div><div class="bar" style="height:82%"></div>
-          <div class="bar" style="height:52%"></div><div class="bar" style="height:58%"></div>
-          <div class="bar" style="height:33%"></div><div class="bar" style="height:66%"></div>
-          <div class="bar" style="height:47%"></div><div class="bar" style="height:76%"></div>
-        </div>
-        <div class="progress-track" onclick="seekAudio(event,this)">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <div class="progress-times">
-          <span id="currentTime" class="mono">0:00</span>
-          <span class="mono">1:30</span>
-        </div>
-        <audio id="audioPlayer" preload="auto">
-          <source src="demo.mp3" type="audio/mpeg">
-        </audio>
-        <p class="demo-note mono">Full 6-minute loop included in purchase · best with stereo headphones</p>
+<!-- MECHANISM -->
+<section style="background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="wrap">
+    <div class="eyebrow">The Mechanism</div>
+    <h2 class="display" style="font-size:clamp(26px,3.6vw,36px);font-weight:600;max-width:600px;">Two layers, running at the same time</h2>
+    <div class="mech-grid">
+      <div class="mech-card">
+        <div class="idx mono">LAYER 01</div>
+        <h3>Broadband Frequency Masking</h3>
+        <p>A broadband noise layer acoustically covers sudden sounds — traffic, keyboard clicks, nearby conversation. Your mind stops involuntarily orienting toward them, because they're no longer acoustically distinct.</p>
+      </div>
+      <div class="mech-card">
+        <div class="idx mono">LAYER 02</div>
+        <h3>40Hz Binaural Entrainment</h3>
+        <p>Each ear receives a slightly different frequency. Your brain resolves the difference by generating an internal 40Hz tone. Research links 40Hz gamma activity to heightened attention and complex cognitive processing. <em>This layer only works over stereo headphones.</em></p>
       </div>
     </div>
-  </section>
+    <div class="honest-note">
+      <strong>An honest note:</strong> binaural beat research is real, but it's still an evolving field. Results vary from person to person. Some people notice a difference immediately; others need a few sessions. That's exactly why the 30-day guarantee exists — if you don't feel a difference, you get your money back.
+    </div>
+  </div>
+</section>
 
-  <div class="divider"></div>
-
-  <section class="section">
-    <div class="container-sm">
-      <p class="section-tag">// MECHANISM</p>
-      <h2 class="section-title" style="margin-bottom:28px">Two Things Happening<br>Inside The File</h2>
-      <div class="steps">
-        <div class="step">
-          <div class="step-num mono">01</div>
-          <div>
-            <div class="step-title">Broadband Frequency Masking</div>
-            <p class="step-desc">A broadband noise layer acoustically drowns out unpredictable environmental sounds — sudden voices, traffic, keyboard noise. Your brain stops involuntarily orienting toward them because they're no longer acoustically distinct.</p>
-          </div>
-        </div>
-        <div class="step">
-          <div class="step-num mono">02</div>
-          <div>
-            <div class="step-title">40Hz Binaural Entrainment</div>
-            <p class="step-desc">Different frequencies are delivered to your left and right ear. The brain resolves the difference and produces a 40Hz internal tone. Research suggests 40Hz gamma activity correlates with heightened attention and complex cognitive processing. <em style="color:#6b7280">This only works with stereo headphones.</em></p>
-          </div>
-        </div>
+<!-- INCLUDED -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">What's Included</div>
+    <h2 class="display" style="font-size:clamp(26px,3.6vw,36px);font-weight:600;">Exactly what you get</h2>
+    <div class="inc-grid">
+      <div class="inc-item">
+        <div class="mark">◈</div>
+        <h4>A 6-Minute Audio File</h4>
+        <p>Uncompressed WAV plus a high-quality MP3. Built for continuous looping — 6 minutes repeats seamlessly for hours.</p>
       </div>
-      <div style="margin-top:24px;padding:16px 20px;background:#070b14;border:1px solid #1f2937;border-radius:10px">
-        <p style="font-size:12px;color:#6b7280;line-height:1.7"><strong style="color:#9ca3af">Honest note:</strong> Binaural beat research is real but still evolving. Results vary by individual. Some people feel a significant difference immediately. Others need a few sessions. The 30-day guarantee exists for this reason — if you don't notice a difference, you get your money back.</p>
+      <div class="inc-item">
+        <div class="mark">◈</div>
+        <h4>Layered Frequency Design</h4>
+        <p>A 40Hz gamma binaural layer sits on top of broadband masking. Zero vocals, zero melody, zero linguistic content to distract you.</p>
+      </div>
+      <div class="inc-item">
+        <div class="mark">◈</div>
+        <h4>A PDF Usage Guide</h4>
+        <p>Volume settings (30–40% is ideal), headphone requirements, recommended session length, and how to pair it with different types of work.</p>
+      </div>
+      <div class="inc-item">
+        <div class="mark">◈</div>
+        <h4>Permanent Dashboard Access</h4>
+        <p>Files are delivered to your Whop dashboard. No expiry, no repurchasing. Download once, keep it forever.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <div class="divider"></div>
+<!-- PRICING / CHECKOUT -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="eyebrow">Get Access</div>
+    <h2 class="display" style="font-size:clamp(26px,3.6vw,36px);font-weight:600;">One payment. No subscription. Instant dashboard access.</h2>
 
-  <section class="section">
-    <div class="container-sm">
-      <p class="section-tag">// WHAT'S INCLUDED</p>
-      <h2 class="section-title" style="margin-bottom:28px">Exactly What You Receive</h2>
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon">◈</div>
-          <div><div class="feature-title">6-Minute Audio File</div><div class="feature-desc">Uncompressed WAV + high-quality MP3. Designed for loop playback — 6 minutes seamlessly repeats for hours with no jarring transitions.</div></div>
+    <div class="price-grid">
+      <!-- MAIN PRODUCT -->
+      <div class="price-card main">
+        <span class="tag">Core Product</span>
+        <h3>The Cortical Resonance Blueprint</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> 6-minute audio file (WAV + MP3)</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> 40Hz binaural + masking layer</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> PDF usage guide</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Permanent dashboard access</li>
+        </ul>
+        <div class="price-tag">$37 <small>one-time</small></div>
+        <div class="price-note">No hidden fees. No fine print.</div>
+
+        <!-- Whop Embedded Checkout — Focus Protocol -->
+        <div class="checkout-embed">
+          <div
+            id="checkout-main"
+            data-whop-checkout-plan-id="plan_kjPN9mxV6f7z4"
+            data-whop-checkout-return-url="https://neurophase4.com/thank-you"
+            data-whop-checkout-theme="light"
+            data-whop-checkout-on-state-change="onMainStateChange"
+            data-whop-checkout-on-complete="onMainComplete"
+          ></div>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">◈</div>
-          <div><div class="feature-title">Layered Frequency Stack</div><div class="feature-desc">40Hz gamma binaural layer embedded over broadband masking noise. Zero vocals, zero melody, zero linguistic content.</div></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">◈</div>
-          <div><div class="feature-title">PDF Implementation Guide</div><div class="feature-desc">Volume settings (30-40% is optimal), headphone requirements, session length recommendations, and task-pairing protocols.</div></div>
-        </div>
-        <div class="feature-card">
-          <div class="feature-icon">◈</div>
-          <div><div class="feature-title">Permanent Dashboard Access</div><div class="feature-desc">Files delivered to your Whop dashboard. No expiry, no re-purchase. Download once, keep forever.</div></div>
+
+        <div class="guarantee-inline">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          Don't feel a difference in 30 days? Full refund.
         </div>
       </div>
-    </div>
-  </section>
 
-  <div class="divider"></div>
+      <!-- ADD-ON PRODUCT -->
+      <div class="price-card">
+        <span class="tag" style="color:var(--muted);border-color:var(--line);">Complementary</span>
+        <h3>Sleep &amp; Recovery Module</h3>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Neural down-shifting audio track</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Delta-wave frequency layer</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Built for post-work wind-down</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Pairs with the Focus Protocol</li>
+        </ul>
+        <p style="margin-top:14px;font-size:14px;color:var(--muted);">If you're investing in focus, recovery is part of the same system. This closes the loop.</p>
+        <div class="price-tag">$4.98 <small>one-time</small></div>
 
-  <section class="section" id="pricing">
-    <div class="container-sm">
-      <p class="section-tag" style="text-align:center">// ACCESS</p>
-      <h2 class="section-title" style="text-align:center;margin-bottom:8px">Two Products. One Decision.</h2>
-      <p style="text-align:center;color:#6b7280;font-size:13px;margin-bottom:36px;line-height:1.7">One-time payment. No subscription. Instant delivery to your dashboard.</p>
-      <div class="pricing-grid">
-        <div class="pricing-card featured">
-          <span class="rec-badge mono">MAIN</span>
-          <div>
-            <p class="plan-tag red mono">// FOCUS PROTOCOL</p>
-            <h3 class="plan-title">The Cortical Resonance Blueprint</h3>
-            <ul class="plan-features">
-              <li><span class="check-red">✓</span> 6-min audio file (WAV + MP3)</li>
-              <li><span class="check-red">✓</span> 40Hz binaural + masking layer</li>
-              <li><span class="check-red">✓</span> PDF implementation guide</li>
-              <li><span class="check-red">✓</span> Permanent dashboard access</li>
-            </ul>
-          </div>
-          <div>
-            <div class="price-row"><span class="price-big">$37</span><span class="price-period mono">one-time</span></div>
-            <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4" class="btn-primary mono" style="display:block;text-align:center;width:100%">GET ACCESS →</a>
-          </div>
-        </div>
-        <div class="pricing-card standard">
-          <div>
-            <p class="plan-tag gray mono">// RECOVERY MODULE</p>
-            <h3 class="plan-title">Sleep & Recovery Reset</h3>
-            <ul class="plan-features">
-              <li><span class="check-dim">✓</span> Neural wind-down audio track</li>
-              <li><span class="check-dim">✓</span> Delta-wave frequency layer</li>
-              <li><span class="check-dim">✓</span> Designed for post-work use</li>
-              <li><span class="check-dim">✓</span> Complements the Focus Protocol</li>
-            </ul>
-            <p style="font-size:12px;color:#4b5563;line-height:1.6;margin-bottom:16px">If you're pushing hard on focused work, recovery is part of the system. This closes the loop.</p>
-          </div>
-          <div>
-            <div class="price-row"><span class="price-big">$4.98</span><span class="price-period mono">one-time</span></div>
-            <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6" class="btn-secondary mono" style="display:block;text-align:center;width:100%">ADD THIS →</a>
-          </div>
-        </div>
-      </div>
-      <div class="guarantee-box">
-        <div class="guarantee-icon">🛡️</div>
-        <div>
-          <div class="guarantee-title">30-Day Full Refund — No Questions</div>
-          <div class="guarantee-desc">Use the protocol for up to 30 days. If you don't notice a difference in your focus sessions, email support@neurophase4.com for a complete refund. No forms, no conditions.</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="divider"></div>
-
-  <section class="section">
-    <div class="container-sm">
-      <p class="section-tag">// QUESTIONS</p>
-      <h2 class="section-title" style="margin-bottom:28px">Straight Answers</h2>
-      <div class="faq-list">
-        <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q"><span>Is this different from free binaural beats on YouTube?</span><svg class="faq-arrow" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>
-          <div class="faq-ans"><p>Technically, binaural beat generation is similar. The difference is in the layering: most YouTube tracks are single-layer. This file combines gamma binaural entrainment with broadband frequency masking simultaneously. You also get a PDF guide — most free tracks give you no instruction on how to use them correctly, which is why people often don't feel results.</p></div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q"><span>Does this work without headphones?</span><svg class="faq-arrow" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>
-          <div class="faq-ans"><p>The masking layer works on speakers. The binaural entrainment does not — it requires separate audio delivery to each ear. Without stereo headphones, you lose roughly 70% of the intended effect. Earbuds, over-ear, or on-ear all work.</p></div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q"><span>How do I receive the files after purchase?</span><svg class="faq-arrow" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>
-          <div class="faq-ans"><p>Immediately after checkout you're granted access to a private Whop dashboard. All files (WAV, MP3, PDF) are available for direct download. Access never expires.</p></div>
-        </div>
-        <div class="faq-item" onclick="toggleFaq(this)">
-          <div class="faq-q"><span>Is this safe for daily use?</span><svg class="faq-arrow" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></div>
-          <div class="faq-ans"><p>Yes. No stimulants, no subliminal content, no hidden frequencies beyond what is described. The PDF guide includes recommended session durations. People with epilepsy or severe auditory sensitivity should consult a doctor before use.</p></div>
+        <!-- Whop Embedded Checkout — Recovery Module -->
+        <div class="checkout-embed">
+          <div
+            id="checkout-recovery"
+            data-whop-checkout-plan-id="plan_jJ924AiHKX8C6"
+            data-whop-checkout-return-url="https://neurophase4.com/thank-you"
+            data-whop-checkout-theme="light"
+            data-whop-checkout-on-state-change="onRecoveryStateChange"
+            data-whop-checkout-on-complete="onRecoveryComplete"
+          ></div>
         </div>
       </div>
     </div>
-  </section>
 
-  <div class="divider"></div>
-
-  <section class="section">
-    <div class="container-sm">
-      <div class="final-cta">
-        <h2>A Tool. Not a Promise.</h2>
-        <p>Neurophase 4 is an audio file engineered to make deep work easier. It either works for you within 30 days, or you pay nothing. That's the deal.</p>
-        <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4" class="btn-primary mono" style="font-size:13px;padding:17px 36px">GET THE BLUEPRINT — $37.00 →</a>
-        <p class="final-note mono">Instant delivery · Lifetime access · 30-day refund guarantee</p>
+    <div class="guarantee-block">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5.5-3.8 9-8 11-4.2-2-8-5.5-8-11V6l8-4z"/></svg>
+      <div>
+        <h3>30-Day Full Refund — No Questions Asked</h3>
+        <p>Use the protocol for up to 30 days. If you don't notice a difference in your focus sessions, email support@neurophase4.com and get a full refund. No form, no conditions. That's the promise, and we keep it exactly as stated.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-</main>
+<!-- FAQ -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Questions</div>
+    <h2 class="display" style="font-size:clamp(26px,3.6vw,36px);font-weight:600;margin-bottom:8px;">Straight answers</h2>
+
+    <div class="faq">
+      <div class="faq-item">
+        <div class="faq-q"><span>Is this different from the free binaural tracks on YouTube?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Technically, the binaural generation is similar. The difference is layering: most YouTube tracks are single-layer. This file combines gamma binaural entrainment with simultaneous broadband frequency masking, plus a PDF guide — most free tracks don't come with real usage instructions, which is a big reason people don't get results from them.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>Does it work without headphones?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>The masking layer works through speakers. Binaural entrainment doesn't — it requires separate audio delivery to each ear. Without stereo headphones you lose roughly 70% of the intended effect. In-ear, over-ear, on-ear all work fine.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>How do I get the files after purchase?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>The moment checkout completes, you get access to a private Whop dashboard. All files (WAV, MP3, PDF) are available for download right away. Access never expires.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>Is it safe for daily use?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>Yes. No stimulants, no subliminal content, no hidden frequencies beyond what's described. The PDF guide includes recommended session lengths. People with epilepsy or severe auditory sensitivity should check with a doctor before use.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q"><span>What if it genuinely doesn't work for me?</span><span class="plus">+</span></div>
+        <div class="faq-a"><p>You get a full refund within 30 days. No questions, no form to fill out. We're not selling this as a miracle — we're selling it as a low-risk tool worth trying, because that's what it is.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final">
+  <div class="wrap">
+    <div class="eyebrow" style="justify-content:center;">A Tool. Not A Promise.</div>
+    <h2>Either it works within 30 days, or you pay nothing.</h2>
+    <a href="#pricing" class="btn-primary">Get The Protocol — $37</a>
+    <div class="trust-line">
+      <span>Instant delivery</span>
+      <span>·</span>
+      <span>Lifetime access</span>
+      <span>·</span>
+      <span>30-day refund guarantee</span>
+    </div>
+  </div>
+</section>
 
 <footer>
-  <div class="footer-logo mono">NEUROPHASE<span>4</span></div>
-  <p class="footer-disc"><strong>Disclaimer:</strong> Neurophase 4 is an audio tool designed for personal productivity. It is not a medical device and does not diagnose, treat, or cure any condition. Binaural beat research is ongoing and individual results vary. This site is not affiliated with Meta Platforms, Inc.</p>
-  <div class="footer-links">
-    <a href="#">PRIVACY POLICY</a>
-    <a href="#">TERMS OF SERVICE</a>
-    <a href="#">REFUND POLICY</a>
+  <div class="wrap">
+    <p class="disclaimer">
+      <strong>Disclaimer:</strong> Neurophase 4 is an audio tool designed for personal productivity. It is not a medical device and does not diagnose, treat, or cure any condition. Binaural beat research is ongoing and individual results vary. This site is not affiliated with Meta Platforms, Inc.
+    </p>
+    <div class="foot-links">
+      <a href="#">PRIVACY POLICY</a>
+      <a href="#">TERMS OF SERVICE</a>
+      <a href="#">REFUND POLICY</a>
+    </div>
+    <p class="copyright">© 2026 Neurophase 4 Digital Technologies · support@neurophase4.com</p>
   </div>
-  <p class="footer-copy mono">© 2026 Neurophase 4 Digital Technologies · support@neurophase4.com</p>
 </footer>
 
+<div class="sticky-cta">
+  <div class="mono" style="font-size:13px;color:var(--muted);">30-day refund guarantee</div>
+  <a href="#pricing" class="btn-primary">Get It — $37</a>
+</div>
+
 <script>
-  var audio=document.getElementById('audioPlayer');
-  var playIcon=document.getElementById('playIcon');
-  var pauseIcon=document.getElementById('pauseIcon');
-  var waveform=document.getElementById('waveform');
-  var progressFill=document.getElementById('progressFill');
-  var currentTimeEl=document.getElementById('currentTime');
-  var isPlaying=false,simInterval,simProgress=0;
-
-  // Modern browser policy handler for image2url audio stream
-  function toggleAudio(){
-    var hasReal=audio.src&&audio.src.includes('.mp3')&&!audio.src.includes('YOUR_DEMO_AUDIO');
-    
-    if(isPlaying){
-      audio.pause();
-    } else {
-      if(hasReal){
-        audio.play().catch(function(error) {
-          console.log("Audio playback delayed or prevented by browser infrastructure security context.", error);
-        });
-      }
-    }
-    
-    isPlaying=!isPlaying;
-    playIcon.style.display=isPlaying?'none':'block';
-    pauseIcon.style.display=isPlaying?'block':'none';
-    
-    if(isPlaying){
-      waveform.classList.add('playing');
-      if(!hasReal)startSim();
-    } else {
-      waveform.classList.remove('playing');
-      clearInterval(simInterval);
-    }
-  }
-
-  function startSim(){
-    clearInterval(simInterval);
-    simInterval=setInterval(function(){
-      if(!isPlaying){clearInterval(simInterval);return;}
-      simProgress=Math.min(simProgress+100/90,100);
-      var s=Math.floor(simProgress/100*90);
-      progressFill.style.width=simProgress+'%';
-      currentTimeEl.textContent='0:'+(s<10?'0':'')+s;
-      if(simProgress>=100){
-        clearInterval(simInterval);isPlaying=false;simProgress=0;
-        playIcon.style.display='block';pauseIcon.style.display='none';
-        waveform.classList.remove('playing');
-        progressFill.style.width='0%';currentTimeEl.textContent='0:00';
-      }
-    },1000);
-  }
-
-  audio.addEventListener('timeupdate',function(){
-    if(audio.duration) {
-      progressFill.style.width=(audio.currentTime/audio.duration*100)+'%';
-      var m=Math.floor(audio.currentTime/60),s=Math.floor(audio.currentTime%60);
-      currentTimeEl.textContent=m+':'+(s<10?'0':'')+s;
-    }
+  // FAQ accordion
+  document.querySelectorAll('.faq-q').forEach(function(q){
+    q.addEventListener('click', function(){
+      var item = q.parentElement;
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+      if(!wasOpen) item.classList.add('open');
+    });
   });
 
-  audio.addEventListener('ended',function(){
-    isPlaying=false;progressFill.style.width='0%';currentTimeEl.textContent='0:00';
-    playIcon.style.display='block';pauseIcon.style.display='none';
-    waveform.classList.remove('playing');
-  });
+  // Meta Pixel: fire InitiateCheckout once when the embedded checkout is ready (i.e. seen), not on every render
+  var mainInitiateFired = false;
+  var recoveryInitiateFired = false;
 
-  function seekAudio(e,el){
-    var pct=(e.clientX-el.getBoundingClientRect().left)/el.offsetWidth;
-    if(audio.src&&!audio.src.includes('YOUR_DEMO')&&audio.duration){audio.currentTime=pct*audio.duration;}
-    else{simProgress=pct*100;}
-  }
+  window.onMainStateChange = function(state){
+    if(state === 'ready' && !mainInitiateFired){
+      mainInitiateFired = true;
+      if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
+    }
+  };
+  window.onRecoveryStateChange = function(state){
+    if(state === 'ready' && !recoveryInitiateFired){
+      recoveryInitiateFired = true;
+      if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }
+    }
+  };
 
-  function toggleFaq(el){
-    var open=el.classList.contains('open');
-    document.querySelectorAll('.faq-item').forEach(function(f){f.classList.remove('open');});
-    if(!open)el.classList.add('open');
-  }
+  // Meta Pixel: fire Purchase on real completion (server-side/CAPI is still recommended for accuracy)
+  window.onMainComplete = function(planId, receiptId){
+    if(window.fbq){ fbq('track', 'Purchase', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
+    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId;
+  };
+  window.onRecoveryComplete = function(planId, receiptId){
+    if(window.fbq){ fbq('track', 'Purchase', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }
+    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId;
+  };
 </script>
+
 </body>
 </html>
