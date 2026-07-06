@@ -180,8 +180,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
   /* PRICING / CHECKOUT */
   .pricing{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .price-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:24px;margin-top:40px;align-items:start;}
-  @media(max-width:800px){.price-grid{grid-template-columns:1fr;}}
+  .price-grid{display:grid;grid-template-columns:1fr;gap:24px;margin-top:40px;align-items:start;max-width:640px;}
   .price-card{
     background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;
   }
@@ -203,12 +202,55 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   .price-note{margin-top:6px;font-size:13px;color:var(--muted2);}
   .checkout-embed{
     margin-top:22px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:#fff;
-    min-height:64px;
+    min-height:64px;position:relative;
   }
+  .checkout-loading{
+    display:flex;align-items:center;gap:10px;padding:20px;
+    font-family:'JetBrains Mono';font-size:12.5px;color:#8a8378;
+  }
+  .checkout-loading .spinner{
+    width:14px;height:14px;border-radius:50%;flex:none;
+    border:2px solid #e5ddce;border-top-color:var(--accent-dim);
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .checkout-fallback{
+    margin-top:10px;font-size:12.5px;color:var(--muted2);text-align:center;
+  }
+  .checkout-fallback a{color:var(--accent);border-bottom:1px solid var(--accent-dim);}
+  .support-line{
+    margin-top:14px;font-size:12.5px;color:var(--muted2);text-align:center;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .support-line svg{width:13px;height:13px;flex:none;}
+  .addon-toggle{
+    display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px dashed var(--line);
+    border-radius:6px;margin-top:24px;cursor:pointer;background:var(--bg-alt);
+  }
+  .addon-toggle input{margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex:none;cursor:pointer;}
+  .addon-toggle .addon-title{font-family:'Space Grotesk';font-weight:600;font-size:14.5px;}
+  .addon-toggle .addon-desc{font-size:13px;color:var(--muted);margin-top:2px;}
+  #recovery-card{display:none;}
+  #recovery-card.visible{display:block;margin-top:20px;}
   .guarantee-inline{
     margin-top:18px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
   }
   .guarantee-inline svg{width:16px;height:16px;color:var(--accent);flex:none;}
+
+  .pre-checkout{
+    margin-top:24px;padding:18px 20px;background:var(--bg);border:1px solid var(--line);border-radius:6px;
+  }
+  .pre-checkout .security-row{
+    display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted);
+    padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line);flex-wrap:wrap;
+  }
+  .pre-checkout .security-row svg{width:14px;height:14px;color:var(--accent);flex:none;}
+  .pre-checkout .after-pay{list-style:none;}
+  .pre-checkout .after-pay li{
+    font-size:13.5px;color:var(--muted);padding:4px 0;display:flex;gap:8px;align-items:flex-start;
+  }
+  .pre-checkout .after-pay li svg{width:13px;height:13px;color:var(--good);flex:none;margin-top:3px;}
+  .pay-methods{font-family:'JetBrains Mono';font-size:11px;color:var(--muted2);letter-spacing:0.03em;}
 
   /* GUARANTEE BANNER */
   .guarantee-block{
@@ -409,8 +451,21 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         <div class="price-tag">$37 <small>one-time</small></div>
         <div class="price-note">No hidden fees. No fine print.</div>
 
+        <div class="pre-checkout">
+          <div class="security-row">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+            Encrypted checkout · processed by Whop · one-time charge, no recurring billing
+          </div>
+          <ul class="after-pay">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> You get dashboard access the instant payment clears</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> WAV, MP3 and the PDF guide are ready to download right away</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Not right for you? Full refund within 30 days, no form required</li>
+          </ul>
+        </div>
+
         <!-- Whop Embedded Checkout — Focus Protocol -->
         <div class="checkout-embed">
+          <div class="checkout-loading" id="loading-main"><span class="spinner"></span> Loading secure payment form…</div>
           <div
             id="checkout-main"
             data-whop-checkout-plan-id="plan_kjPN9mxV6f7z4"
@@ -420,15 +475,31 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
             data-whop-checkout-on-complete="onMainComplete"
           ></div>
         </div>
+        <div class="checkout-fallback">
+          Form not loading? <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
+        </div>
 
         <div class="guarantee-inline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
           Don't feel a difference in 30 days? Full refund.
         </div>
+
+        <div class="support-line">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M4 6l8 6 8-6M4 6v12h16V6"/></svg>
+          Questions before you buy? support@neurophase4.com · we reply within 24h
+        </div>
+
+        <label class="addon-toggle" for="addon-checkbox">
+          <input type="checkbox" id="addon-checkbox" onchange="document.getElementById('recovery-card').classList.toggle('visible', this.checked)">
+          <div>
+            <div class="addon-title">+ Add the Sleep &amp; Recovery Module — $4.98</div>
+            <div class="addon-desc">Delta-wave audio for post-work wind-down. Pairs with the Focus Protocol. Charged as a separate one-time payment.</div>
+          </div>
+        </label>
       </div>
 
-      <!-- ADD-ON PRODUCT -->
-      <div class="price-card">
+      <!-- ADD-ON PRODUCT (hidden until the checkbox above is checked) -->
+      <div class="price-card" id="recovery-card">
         <span class="tag" style="color:var(--muted);border-color:var(--line);">Complementary</span>
         <h3>Sleep &amp; Recovery Module</h3>
         <ul>
@@ -442,6 +513,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
         <!-- Whop Embedded Checkout — Recovery Module -->
         <div class="checkout-embed">
+          <div class="checkout-loading" id="loading-recovery"><span class="spinner"></span> Loading secure payment form…</div>
           <div
             id="checkout-recovery"
             data-whop-checkout-plan-id="plan_jJ924AiHKX8C6"
@@ -450,6 +522,9 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
             data-whop-checkout-on-state-change="onRecoveryStateChange"
             data-whop-checkout-on-complete="onRecoveryComplete"
           ></div>
+        </div>
+        <div class="checkout-fallback">
+          Form not loading? <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
       </div>
     </div>
@@ -546,17 +621,30 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   var recoveryInitiateFired = false;
 
   window.onMainStateChange = function(state){
+    var loader = document.getElementById('loading-main');
+    if(state === 'ready' && loader){ loader.style.display = 'none'; }
     if(state === 'ready' && !mainInitiateFired){
       mainInitiateFired = true;
       if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
     }
   };
   window.onRecoveryStateChange = function(state){
+    var loader = document.getElementById('loading-recovery');
+    if(state === 'ready' && loader){ loader.style.display = 'none'; }
     if(state === 'ready' && !recoveryInitiateFired){
       recoveryInitiateFired = true;
       if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }
     }
   };
+  // Safety net: if the embed hasn't reported "ready" within 6 seconds
+  // (e.g. blocked by an ad blocker), keep the fallback link visible and
+  // make the loading text explain the likely cause instead of spinning forever.
+  setTimeout(function(){
+    var l = document.getElementById('loading-main');
+    if(l && l.style.display !== 'none'){
+      l.innerHTML = 'Having trouble loading? Your browser or an ad blocker may be blocking the payment form — use the link below.';
+    }
+  }, 6000);
 
   // Meta Pixel: fire Purchase on real completion (server-side/CAPI is still recommended for accuracy)
   window.onMainComplete = function(planId, receiptId){
