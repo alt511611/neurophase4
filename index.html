@@ -5,10 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Neurophase 4 — Acoustic Focus Protocol</title>
 
-<!-- Whop Embedded Checkout loader -->
 <script async defer src="https://js.whop.com/static/checkout/loader.js"></script>
 
-<!-- Meta Pixel — replace YOUR_PIXEL_ID with your real Pixel ID -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -39,6 +37,8 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     --accent-dim: #8a6d33;
     --accent-soft: rgba(212,165,74,0.12);
     --good: #6fae8a;
+    --danger: #cf6a4c;
+    --danger-soft: rgba(207, 106, 76, 0.12);
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   html{scroll-behavior:smooth;}
@@ -180,7 +180,9 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
   /* PRICING / CHECKOUT */
   .pricing{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
-  .price-grid{display:grid;grid-template-columns:1fr;gap:24px;margin-top:40px;align-items:start;max-width:640px;}
+  .price-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;margin-top:40px;align-items:start;}
+  @media(max-width:960px){.price-grid{grid-template-columns:1fr; max-width:640px; margin: 40px auto 0;}}
+  
   .price-card{
     background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;
   }
@@ -213,6 +215,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     border:2px solid #e5ddce;border-top-color:var(--accent-dim);
     animation:spin 0.8s linear infinite;
   }
+  @media(max-width:720px){.price-grid{grid-template-columns:1fr;}}
   @keyframes spin{to{transform:rotate(360deg);}}
   .checkout-fallback{
     margin-top:10px;font-size:12.5px;color:var(--muted2);text-align:center;
@@ -251,6 +254,126 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   }
   .pre-checkout .after-pay li svg{width:13px;height:13px;color:var(--good);flex:none;margin-top:3px;}
   .pay-methods{font-family:'JetBrains Mono';font-size:11px;color:var(--muted2);letter-spacing:0.03em;}
+
+  /* THE AGGRESSIVE ADDITIONS SECTION (CSS) */
+  .aggressive-alert{
+    background:var(--danger-soft);
+    border:1px solid var(--danger);
+    border-radius:6px;
+    padding:16px;
+    margin-bottom:24px;
+    font-size:14px;
+    line-height:1.5;
+  }
+  .aggressive-alert strong{
+    color:var(--text);
+    font-weight:700;
+  }
+  .aggressive-alert .badge{
+    background:var(--danger);
+    color:#14110d;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    font-weight:600;
+    padding:2px 6px;
+    border-radius:2px;
+    margin-right:8px;
+    text-transform:uppercase;
+  }
+  
+  .cost-box{
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:var(--bg-card);
+    padding:28px;
+  }
+  .cost-box h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:14px;
+  }
+  .cost-grid{
+    display:grid;
+    grid-template-columns:1fr 1.2fr;
+    gap:18px;
+    margin-top:20px;
+  }
+  @media(max-width:640px){.cost-grid{grid-template-columns:1fr;}}
+  .cost-item{
+    background:var(--bg);
+    border:1px solid var(--line);
+    padding:16px;
+    border-radius:4px;
+  }
+  .cost-item .title{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--muted2);
+    text-transform:uppercase;
+  }
+  .cost-item .val{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--accent);
+    margin-top:6px;
+  }
+  .cost-item .val.red{
+    color:var(--danger);
+  }
+  .cost-item .desc{
+    font-size:13px;
+    color:var(--muted);
+    margin-top:6px;
+  }
+
+  .aggressive-guarantee{
+    border:1px solid var(--good);
+    background:rgba(111, 174, 138, 0.08);
+    border-radius:6px;
+    padding:20px;
+    margin-top:24px;
+  }
+  .aggressive-guarantee h4{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:16px;
+    font-weight:600;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .aggressive-guarantee h4 svg{
+    width:18px;
+    height:18px;
+    color:var(--good);
+    flex:none;
+  }
+  .aggressive-guarantee p{
+    font-size:13.5px;
+    color:var(--muted);
+    margin-top:8px;
+    line-height:1.5;
+  }
+  .loss-block{
+    margin-top:16px;
+    padding:12px;
+    border-radius:4px;
+    font-size:12.5px;
+    line-height:1.4;
+    text-align:center;
+    border: 1px solid var(--line);
+    background: rgba(20, 17, 13, 0.4);
+  }
+  .loss-block a.cancel-btn{
+    color:var(--muted2);
+    text-decoration:underline;
+    transition:color .2s;
+  }
+  .loss-block a.cancel-btn:hover{
+    color:var(--danger);
+  }
 
   /* GUARANTEE BANNER */
   .guarantee-block{
@@ -306,7 +429,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </nav>
 </header>
 
-<!-- HERO -->
 <section class="hero">
   <div class="wrap">
     <div class="eyebrow">Acoustic Cognitive Protocol — v4.1</div>
@@ -334,7 +456,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- PROBLEM -->
 <section class="problem">
   <div class="wrap">
     <div class="eyebrow">The Problem</div>
@@ -362,7 +483,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- DEMO -->
 <section id="demo">
   <div class="wrap">
     <div class="eyebrow">90-Second Sample</div>
@@ -378,7 +498,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- MECHANISM -->
 <section style="background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="eyebrow">The Mechanism</div>
@@ -405,7 +524,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- INCLUDED -->
 <section>
   <div class="wrap">
     <div class="eyebrow">What's Included</div>
@@ -435,15 +553,53 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- PRICING / CHECKOUT -->
 <section class="pricing" id="pricing">
   <div class="wrap">
     <div class="eyebrow">Get Access</div>
     <h2 class="display" style="font-size:clamp(26px,3.6vw,36px);font-weight:600;">One payment. No subscription. Instant dashboard access.</h2>
 
     <div class="price-grid">
-      <!-- MAIN PRODUCT -->
+      
+      <div class="cost-box">
+        <h4>What is 23 minutes of your time actually worth?</h4>
+        <p style="color:var(--muted); font-size:15px;">If your hourly output or contract rate is average, every single interruption that pulls your prefrontal cortex out of deep work is a silent financial leak.</p>
+        
+        <div class="cost-grid">
+          <div class="cost-item">
+            <div class="title">1 Interruption / Day</div>
+            <div class="val red">$383</div>
+            <div class="desc">In lost cognitive momentum and billable hours every single month.</div>
+          </div>
+          <div class="cost-item">
+            <div class="title">3 Interruptions / Day</div>
+            <div class="val red">$1,149</div>
+            <div class="desc">Completely vaporized into context-switching fatigue and wasted energy.</div>
+          </div>
+        </div>
+
+        <p style="margin-top:20px; color:var(--muted); font-size:14.5px; border-top:1px solid var(--line); padding-top:18px;">
+          Neurophase 4 is a single <strong>$37</strong> investment. If it shields you from just <strong>two</strong> interruptions in your entire career, it has fully returned its cost. Every session after that is pure cognitive profit.
+        </p>
+
+        <div class="aggressive-guarantee">
+          <h4>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l8 4v6c0 5.5-3.8 9-8 11-4.2-2-8-5.5-8-11V6l8-4z"/></svg>
+            The "Keep-The-Files" Double Guarantee
+          </h4>
+          <p>
+            We don't want your money if this doesn't buy you hours of locked-in, uninterrupted flow. Use the protocol for 30 days. If you don't feel a physical, distinct upgrade in your focus:
+            <br><br>
+            Email <strong>support@neurophase4.com</strong>. We will issue a 100% refund of your $37 instantly. No forms, no feedback surveys, no questions. <strong>And you can keep the downloaded lossless WAV, MP3 files, and PDF guide anyway.</strong> We take the entire risk; you either get absolute cognitive focus, or you get a free utility.
+          </p>
+        </div>
+      </div>
+
       <div class="price-card main">
+        <div class="aggressive-alert">
+          <span class="badge">Price Lock v4.1</span>
+          The <strong>$37 lifetime license</strong> is strictly capped. Once slot #100 is taken, the engine updates to v5.0 and the price automatically adjusts to <strong>$59</strong>. Secure your access before the automatic tier increase.
+        </div>
+
         <span class="tag">Core Product</span>
         <h3>Neurophase 4 — Core Protocol</h3>
         <ul>
@@ -463,15 +619,14 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           <ul class="after-pay">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> You get dashboard access the instant payment clears</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> WAV, MP3 and the PDF guide are ready to download right away</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l6 6 12-12"/></svg> Not right for you? Full refund within 30 days, no form required</li>
           </ul>
         </div>
 
-        <!-- Whop Embedded Checkout — Focus Protocol -->
         <div class="checkout-embed">
           <div class="checkout-loading" id="loading-main"><span class="spinner"></span> Loading secure payment form…</div>
           <div
             id="checkout-main"
+            class="whop-checkout"
             data-whop-checkout-plan-id="plan_kjPN9mxV6f7z4"
             data-whop-checkout-return-url="https://neurophase4.com/thank-you"
             data-whop-checkout-theme="light"
@@ -485,7 +640,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
         <div class="guarantee-inline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-          Don't feel a difference in 30 days? Full refund.
+          Keep the files if you refund. Zero friction.
         </div>
 
         <div class="support-line">
@@ -501,8 +656,10 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           </div>
         </label>
       </div>
+      
+    </div>
 
-      <!-- ADD-ON PRODUCT (hidden until the checkbox above is checked) -->
+    <div class="price-grid" style="margin-top:20px; grid-template-columns:1fr; max-width:640px; margin-left:auto; margin-right:auto;">
       <div class="price-card" id="recovery-card">
         <span class="tag" style="color:var(--muted);border-color:var(--line);">Complementary</span>
         <h3>Sleep &amp; Recovery Module</h3>
@@ -515,11 +672,11 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         <p style="margin-top:14px;font-size:14px;color:var(--muted);">If you're investing in focus, recovery is part of the same system. This closes the loop.</p>
         <div class="price-tag">$4.98 <small>one-time</small></div>
 
-        <!-- Whop Embedded Checkout — Recovery Module -->
         <div class="checkout-embed">
           <div class="checkout-loading" id="loading-recovery"><span class="spinner"></span> Loading secure payment form…</div>
           <div
             id="checkout-recovery"
+            class="whop-checkout"
             data-whop-checkout-plan-id="plan_jJ924AiHKX8C6"
             data-whop-checkout-return-url="https://neurophase4.com/thank-you"
             data-whop-checkout-theme="light"
@@ -533,17 +690,22 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
       </div>
     </div>
 
+    <div class="loss-block">
+      <a href="#" class="cancel-btn" onclick="event.preventDefault(); alert('Are you sure you want to go back to fighting phone notifications, getting distracted by background noise, and wasting another $37 worth of focus today? Lock in your environment now risk-free.');">
+        [ Close this page and go back to wasting productive time ]
+      </a>
+    </div>
+
     <div class="guarantee-block">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5.5-3.8 9-8 11-4.2-2-8-5.5-8-11V6l8-4z"/></svg>
       <div>
-        <h3>30-Day Full Refund — No Questions Asked</h3>
-        <p>Use the protocol for up to 30 days. If you don't notice a difference in your focus sessions, email support@neurophase4.com and get a full refund. No form, no conditions. That's the promise, and we keep it exactly as stated.</p>
+        <h3>30-Day Full Refund — Keep the Protocol Anyway</h3>
+        <p>Use the protocol for up to 30 days. If you don't notice a difference in your focus sessions, email support@neurophase4.com and get a full refund. No forms, no criteria, no hard feelings. You even get to keep the files. That's our ultimate trust commitment to your focus.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FAQ -->
 <section>
   <div class="wrap">
     <div class="eyebrow">Questions</div>
@@ -574,7 +736,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<!-- FINAL CTA -->
 <section class="final">
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center;">A Tool. Not A Promise.</div>
