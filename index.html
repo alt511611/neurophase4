@@ -648,7 +648,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         </div>
 
         <label class="addon-toggle" for="addon-checkbox">
-          <input type="checkbox" id="addon-checkbox" onchange="document.getElementById('recovery-card').classList.toggle('visible', this.checked)">
+          <input type="checkbox" id="addon-checkbox" onchange="document.getElementById('recovery-card').classList.toggle('visible', this.checked); if(this.checked && window.fbq && !window.__recoveryInitiateFired){ window.__recoveryInitiateFired = true; fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }">
           <div>
             <div class="addon-title">+ Add the Sleep &amp; Recovery Module — $4.98</div>
             <div class="addon-desc">Delta-wave audio for post-work wind-down. Pairs with the Focus Protocol. Charged as a separate one-time payment.</div>
@@ -780,25 +780,30 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     });
   });
 
-  // Meta Pixel: fire InitiateCheckout once when the embedded checkout is ready (i.e. seen), not on every render
+  // Meta Pixel: fire InitiateCheckout on genuine intent — when the user clicks
+  // a "Get The Protocol" CTA — NOT when the embedded form merely finishes loading.
+  // (Whop's checkout embed only reports loading/ready/disabled, and "ready" fires
+  // for anyone who scrolls to the pricing section, whether they intend to buy or not.
+  // Firing on that passive event pollutes the InitiateCheckout signal Meta optimizes toward.)
   var mainInitiateFired = false;
   var recoveryInitiateFired = false;
+
+  document.querySelectorAll('a[href="#pricing"]').forEach(function(link){
+    link.addEventListener('click', function(){
+      if(!mainInitiateFired){
+        mainInitiateFired = true;
+        if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
+      }
+    });
+  });
 
   window.onMainStateChange = function(state){
     var loader = document.getElementById('loading-main');
     if(state === 'ready' && loader){ loader.style.display = 'none'; }
-    if(state === 'ready' && !mainInitiateFired){
-      mainInitiateFired = true;
-      if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
-    }
   };
   window.onRecoveryStateChange = function(state){
     var loader = document.getElementById('loading-recovery');
     if(state === 'ready' && loader){ loader.style.display = 'none'; }
-    if(state === 'ready' && !recoveryInitiateFired){
-      recoveryInitiateFired = true;
-      if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }
-    }
   };
   // Safety net: if the embed hasn't reported "ready" within 6 seconds
   // (e.g. blocked by an ad blocker), keep the fallback link visible and
@@ -823,4 +828,3 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
 </body>
 </html>
- 
