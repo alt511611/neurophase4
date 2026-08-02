@@ -7,6 +7,13 @@
 
 <script async defer src="https://js.whop.com/static/checkout/loader.js"></script>
 
+<!-- Whop Pixel — company ID: biz_dIGheNOwH9lblE -->
+<script>
+!function(w,d,s,u,n,a,b){if(w[n])return;a=w[n]={q:[],t:+new Date,s:[],o:u,track:function(){a.q.push([+new Date].concat([].slice.call(arguments)))},setScope:function(){a.s=[].slice.call(arguments).filter(function(x){return typeof x==="string"});a.q.push([+new Date,"setScope"].concat(a.s))},scope:function(){var c=[].slice.call(arguments);return{track:function(){a.q.push([+new Date].concat([].slice.call(arguments)).concat([{__scope:c}]))}}}};b=d.createElement(s);b.async=1;b.src=u+"/s.js";d.getElementsByTagName(s)[0].parentNode.insertBefore(b,d.getElementsByTagName(s)[0])}(window,document,"script","https://t.whop.tw","whop");
+whop.setScope("biz_dIGheNOwH9lblE");
+whop.track("page");
+</script>
+
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
@@ -648,7 +655,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         </div>
 
         <label class="addon-toggle" for="addon-checkbox">
-          <input type="checkbox" id="addon-checkbox" onchange="document.getElementById('recovery-card').classList.toggle('visible', this.checked); if(this.checked && window.fbq && !window.__recoveryInitiateFired){ window.__recoveryInitiateFired = true; fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }">
+          <input type="checkbox" id="addon-checkbox" onchange="document.getElementById('recovery-card').classList.toggle('visible', this.checked); if(this.checked && window.fbq && !window.__recoveryInitiateFired){ window.__recoveryInitiateFired = true; fbq('track', 'InitiateCheckout', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); } if(this.checked && window.whop && !window.__recoveryWhopFired){ window.__recoveryWhopFired = true; whop.track('custom', { name: 'addon_selected', value: 4.98, currency: 'USD' }); }">
           <div>
             <div class="addon-title">+ Add the Sleep &amp; Recovery Module — $4.98</div>
             <div class="addon-desc">Delta-wave audio for post-work wind-down. Pairs with the Focus Protocol. Charged as a separate one-time payment.</div>
@@ -793,9 +800,24 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
       if(!mainInitiateFired){
         mainInitiateFired = true;
         if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
+        if(window.whop){ whop.track('add_to_cart', { value: 37.00, currency: 'USD' }); }
       }
     });
   });
+
+  // Whop Pixel: demo engagement signal — fires once, the first time the
+  // visitor actually presses play on the sample track (real engagement,
+  // not just the page loading with the player visible).
+  var demoPlayFired = false;
+  var demoAudioEl = document.querySelector('#demo audio');
+  if(demoAudioEl){
+    demoAudioEl.addEventListener('play', function(){
+      if(!demoPlayFired){
+        demoPlayFired = true;
+        if(window.whop){ whop.track('view_content'); }
+      }
+    });
+  }
 
   window.onMainStateChange = function(state){
     var loader = document.getElementById('loading-main');
