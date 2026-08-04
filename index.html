@@ -242,6 +242,18 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   .addon-toggle .addon-desc{font-size:13px;color:var(--muted);margin-top:2px;}
   #recovery-card{display:none;}
   #recovery-card.visible{display:block;margin-top:20px;}
+  .iab-cta{display:none;}
+  body.iab-detected .checkout-embed,
+  body.iab-detected .checkout-fallback{display:none !important;}
+  body.iab-detected .iab-cta{
+    display:flex;flex-direction:column;gap:10px;align-items:stretch;
+    padding:18px;border:1px solid var(--accent);border-radius:8px;background:rgba(212,165,74,0.08);
+  }
+  .iab-cta p{font-size:13.5px;color:var(--muted);margin:0;}
+  .iab-cta a{
+    display:block;text-align:center;font-family:'Space Grotesk';font-weight:700;font-size:15.5px;
+    background:var(--accent);color:#14110d;padding:14px 20px;border-radius:4px;text-decoration:none;
+  }
   .guarantee-inline{
     margin-top:18px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
   }
@@ -428,6 +440,22 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 </style>
 </head>
 <body>
+<script>
+// Detect Instagram/Facebook/Messenger in-app browsers, which can block the
+// embedded Whop checkout iframe (confirmed via real-device testing: the embed
+// silently degrades and shows "browser may be blocking this form", with no
+// Apple Pay option). For these, skip the embed entirely and show a direct
+// link to the full-page Whop checkout instead.
+(function(){
+  var ua = navigator.userAgent || '';
+  if(/Instagram|FBAN|FBAV|FB_IAB|Messenger/i.test(ua)){
+    document.documentElement.className += ' iab-detected-html';
+    document.addEventListener('DOMContentLoaded', function(){
+      document.body.classList.add('iab-detected');
+    });
+  }
+})();
+</script>
 
 <header>
   <nav>
@@ -643,6 +671,10 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         <div class="checkout-fallback">
           Form not loading? <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
+        <div class="iab-cta">
+          <p>You're browsing inside an app (Instagram/Facebook) that can block secure payment forms. Tap below to open checkout properly:</p>
+          <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/">Complete Secure Checkout — $37 →</a>
+        </div>
 
         <div class="guarantee-inline">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
@@ -692,6 +724,10 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         </div>
         <div class="checkout-fallback">
           Form not loading? <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
+        </div>
+        <div class="iab-cta">
+          <p>You're browsing inside an app that can block secure payment forms. Tap below to open checkout properly:</p>
+          <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/">Complete Secure Checkout — $4.98 →</a>
         </div>
       </div>
     </div>
