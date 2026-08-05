@@ -648,11 +648,11 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           ></div>
         </div>
         <div class="checkout-fallback">
-          Form not loading? <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
+          Form not loading? <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
         <div class="iab-cta">
           <p>You're browsing inside an app (Instagram/Facebook) that can block secure payment forms. Tap below to open checkout properly:</p>
-          <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/">Complete Secure Checkout — $37 →</a>
+          <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt">Complete Secure Checkout — $37 →</a>
         </div>
 
         <div class="guarantee-inline">
@@ -702,11 +702,11 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           ></div>
         </div>
         <div class="checkout-fallback">
-          Form not loading? <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
+          Form not loading? <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/?session=ch_wtSTa1uXKMdkl3L" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
         <div class="iab-cta">
           <p>You're browsing inside an app that can block secure payment forms. Tap below to open checkout properly:</p>
-          <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/">Complete Secure Checkout — $4.98 →</a>
+          <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/?session=ch_wtSTa1uXKMdkl3L">Complete Secure Checkout — $4.98 →</a>
         </div>
       </div>
     </div>
@@ -846,14 +846,16 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     }
   }, 6000);
 
-  // Meta Pixel: fire Purchase on real completion (server-side/CAPI is still recommended for accuracy)
+  // Purchase is now fired on the /thank-you page itself (see thank-you.html),
+  // not here — this avoids a race condition (redirecting immediately after
+  // fbq() can cut off the network beacon) and works for both the embedded
+  // checkout AND the standalone Whop checkout link used for Instagram/Facebook
+  // in-app browsers, which never runs this callback at all.
   window.onMainComplete = function(planId, receiptId){
-    if(window.fbq){ fbq('track', 'Purchase', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
-    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId;
+    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId + '&value=37.00&currency=USD&content_name=Focus%20Protocol';
   };
   window.onRecoveryComplete = function(planId, receiptId){
-    if(window.fbq){ fbq('track', 'Purchase', { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }); }
-    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId;
+    window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId + '&value=4.98&currency=USD&content_name=Recovery%20Module';
   };
 </script>
 
