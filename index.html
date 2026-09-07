@@ -194,6 +194,12 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;
   }
   .price-card.main{border-color:var(--accent-dim);box-shadow:0 0 0 1px var(--accent-dim);}
+  /* Meta traffic is ~all mobile: 32px card padding left the Whop checkout
+     iframe only ~259px wide at 375px, clipping the card-number field. */
+  @media(max-width:640px){
+    .price-card{padding:22px 16px;}
+    .price-card .checkout-embed{margin-left:-10px;margin-right:-10px;}
+  }
   .price-card .tag{
     font-family:'JetBrains Mono';font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
     color:var(--accent);border:1px solid var(--accent-dim);display:inline-block;padding:4px 10px;border-radius:20px;
@@ -250,10 +256,44 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     padding:18px;border:1px solid var(--accent);border-radius:8px;background:rgba(212,165,74,0.08);
   }
   .iab-cta p{font-size:13.5px;color:var(--muted);margin:0;}
-  .iab-cta a{
+  .iab-cta a.iab-go{
     display:block;text-align:center;font-family:'Space Grotesk';font-weight:700;font-size:15.5px;
     background:var(--accent);color:#14110d;padding:14px 20px;border-radius:4px;text-decoration:none;
   }
+  .iab-cta .iab-recap{list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .iab-cta .iab-recap li{
+    font-size:13.5px;color:var(--muted);display:flex;align-items:flex-start;gap:8px;
+  }
+  .iab-cta .iab-recap li::before{content:'\2713';color:var(--good);flex:none;font-size:12px;line-height:1.5;}
+  .iab-cta .iab-foot{
+    font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted2);text-align:center;
+  }
+  /* Capture block. Stays display:none until CAPTURE_ENDPOINT is configured,
+     so it can never half-work in production. */
+  .capture{border-top:1px solid var(--line);}
+  .capture .cap-box{
+    max-width:640px;margin:0 auto;text-align:center;
+    border:1px dashed var(--line);border-radius:8px;padding:36px 28px;background:var(--bg-alt);
+  }
+  .capture h2{font-family:'Space Grotesk';font-size:clamp(22px,3vw,28px);font-weight:600;margin-bottom:12px;}
+  .capture p{color:var(--muted);font-size:15.5px;max-width:520px;margin:0 auto;}
+  .capture form{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap;justify-content:center;}
+  .capture input[type=email]{
+    flex:1 1 260px;min-width:0;padding:13px 14px;border-radius:4px;
+    border:1px solid var(--line);background:var(--bg);color:var(--text);
+    font-family:'Source Sans 3',sans-serif;font-size:15px;
+  }
+  .capture input[type=email]:focus{outline:none;border-color:var(--accent-dim);}
+  .capture button{
+    flex:0 0 auto;padding:13px 22px;border:none;border-radius:4px;cursor:pointer;
+    background:var(--accent);color:#14110d;font-family:'Space Grotesk';font-weight:700;font-size:15px;
+  }
+  .capture button[disabled]{opacity:0.6;cursor:default;}
+  .capture .cap-fine{
+    margin-top:16px;font-family:'JetBrains Mono';font-size:11.5px;color:var(--muted2);line-height:1.7;
+  }
+  .capture .cap-done{color:var(--good);font-size:15px;margin-top:20px;}
+  @media(max-width:640px){.capture .cap-box{padding:28px 18px;}.capture button{flex:1 1 100%;}}
   .guarantee-inline{
     margin-top:18px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);
   }
@@ -518,25 +558,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   </div>
 </section>
 
-<section id="demo">
-  <div class="wrap">
-    <div class="eyebrow">90-Second Sample</div>
-    <h2 class="display" style="font-size:clamp(24px,3.2vw,32px);font-weight:600;">Listen before you buy</h2>
-    <div class="demo-card">
-      <div class="label-row">
-        <div class="title">Cortical Resonance — Focus Mode (Preview)</div>
-        <div class="meta">90-sec sample · headphones recommended</div>
-      </div>
-      <audio controls src="demo.mp3"></audio>
-      <div class="meta" style="margin-top:14px;">The full 6-minute loop is included with purchase · works best with stereo headphones</div>
-      <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
-        <span style="color:var(--muted);font-size:14.5px;">Liked what you heard? The full 6-minute version is one click away.</span>
-        <a href="#pricing" style="font-family:'Space Grotesk';font-weight:600;font-size:14.5px;color:var(--accent);white-space:nowrap;">Get the full version →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <section style="background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
   <div class="wrap">
     <div class="eyebrow">The Mechanism</div>
@@ -559,6 +580,30 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
     <div class="honest-note" style="margin-top:20px;">
       <strong>What this isn't:</strong> it's not a miracle cure, not a medical treatment, and not a substitute for sleep, food, or breaks. It won't turn off a genuinely broken schedule or fix burnout. It's a narrow tool for one specific problem — acoustic distraction during focused work — and we'd rather undersell it than oversell it.
+    </div>
+  </div>
+</section>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="eyebrow">90-Second Sample</div>
+    <h2 class="display" style="font-size:clamp(24px,3.2vw,32px);font-weight:600;">Listen before you buy</h2>
+    <p style="color:var(--muted);max-width:620px;margin-top:14px;font-size:15.5px;">
+      You just read what is in the file. Listen for both layers: the broadband
+      bed that flattens sudden sounds, and the 40Hz tone your brain builds from
+      the two channels. Headphones, or you only hear the first one.
+    </p>
+    <div class="demo-card">
+      <div class="label-row">
+        <div class="title">Cortical Resonance — Focus Mode (Preview)</div>
+        <div class="meta">90-sec sample · headphones recommended</div>
+      </div>
+      <audio controls src="demo.mp3"></audio>
+      <div class="meta" style="margin-top:14px;">The full 6-minute loop is included with purchase · works best with stereo headphones</div>
+      <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+        <span style="color:var(--muted);font-size:14.5px;">Liked what you heard? The full 6-minute version is one click away.</span>
+        <a href="#pricing" style="font-family:'Space Grotesk';font-weight:600;font-size:14.5px;color:var(--accent);white-space:nowrap;">Get the full version →</a>
+      </div>
     </div>
   </div>
 </section>
@@ -610,7 +655,6 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
             Email <strong>support@neurophase4.com</strong>. We will issue a full refund of your $37. No forms, no feedback surveys, no questions asked.
           </p>
         </div>
-      </div>
 
       <div class="price-card main">
         <span class="tag">Core Product</span>
@@ -651,8 +695,14 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           Form not loading? <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
         <div class="iab-cta">
-          <p>You're browsing inside an app (Instagram/Facebook) that can block secure payment forms. Tap below to open checkout properly:</p>
-          <a href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt">Complete Secure Checkout — $37 →</a>
+          <p>You're browsing inside an app (Instagram/Facebook) that can block secure payment forms. Checkout opens on Whop — same price, same guarantee.</p>
+          <ul class="iab-recap">
+            <li>6-minute audio file — uncompressed WAV plus MP3</li>
+            <li>PDF usage guide — volume, headphones, session length</li>
+            <li>Permanent Whop dashboard access, no expiry</li>
+          </ul>
+          <a class="iab-go" href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt">Complete Secure Checkout — $37 →</a>
+          <span class="iab-foot">One-time $37 · no subscription · 30-day full refund, no questions asked</span>
         </div>
 
         <div class="guarantee-inline">
@@ -705,8 +755,13 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           Form not loading? <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/?session=ch_wtSTa1uXKMdkl3L" target="_blank" rel="noopener">Open secure checkout in a new tab →</a>
         </div>
         <div class="iab-cta">
-          <p>You're browsing inside an app that can block secure payment forms. Tap below to open checkout properly:</p>
-          <a href="https://whop.com/checkout/plan_jJ924AiHKX8C6/?session=ch_wtSTa1uXKMdkl3L">Complete Secure Checkout — $4.98 →</a>
+          <p>You're browsing inside an app that can block secure payment forms. Checkout opens on Whop.</p>
+          <ul class="iab-recap">
+            <li>Delta-wave audio for post-work wind-down</li>
+            <li>Pairs with the Focus Protocol, same dashboard</li>
+          </ul>
+          <a class="iab-go" href="https://whop.com/checkout/plan_jJ924AiHKX8C6/?session=ch_wtSTa1uXKMdkl3L">Complete Secure Checkout — $4.98 →</a>
+          <span class="iab-foot">One-time $4.98 · charged separately from the Focus Protocol</span>
         </div>
       </div>
     </div>
@@ -729,7 +784,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
     <div class="faq">
       <div class="faq-item">
         <div class="faq-q"><span>Is this different from the free binaural tracks on YouTube?</span><span class="plus">+</span></div>
-        <div class="faq-a"><p>Technically, the binaural generation is similar. The difference is layering: most YouTube tracks are single-layer. This file combines gamma binaural entrainment with simultaneous broadband frequency masking, plus a PDF guide — most free tracks don't come with real usage instructions, which is a big reason people don't get results from them.</p></div>
+        <div class="faq-a"><p>Layering is the difference. Most YouTube tracks are single-layer; this file runs gamma binaural entrainment and broadband frequency masking at the same time, and ships with a PDF guide on how to actually use it — missing usage instructions is a big reason people don't get results from free tracks. To be straight with you: the binaural generation itself is technically similar.</p></div>
       </div>
       <div class="faq-item">
         <div class="faq-q"><span>Does it work without headphones?</span><span class="plus">+</span></div>
@@ -747,6 +802,31 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         <div class="faq-q"><span>What if it genuinely doesn't work for me?</span><span class="plus">+</span></div>
         <div class="faq-a"><p>You get a full refund within 30 days. No questions, no form to fill out. We're not selling this as a miracle — we're selling it as a low-risk tool worth trying, because that's what it is.</p></div>
       </div>
+    </div>
+  </div>
+</section>
+
+<section class="capture" id="capture" hidden>
+  <div class="wrap">
+    <div class="cap-box">
+      <div class="eyebrow" style="justify-content:center;">Not Today?</div>
+      <h2>Take the sample with you.</h2>
+      <p>
+        Judging a focus track from a web page, on laptop speakers, between two
+        other tabs, is not a fair test. We'll email you the same 90-second file
+        you just heard so you can loop it during real work, on your own
+        headphones. That is the entire offer — the file, nothing else attached.
+      </p>
+      <form id="capture-form" novalidate>
+        <input type="email" id="capture-email" required autocomplete="email"
+               placeholder="you@work.com" aria-label="Email address">
+        <button type="submit" id="capture-submit">Email me the sample</button>
+      </form>
+      <div class="cap-fine">
+        One email with the file, then a couple of follow-ups about the full
+        protocol. Unsubscribe in one click. We don't sell or share your address.
+      </div>
+      <div class="cap-done" id="capture-done" hidden>Sent. Check your inbox — including spam, once.</div>
     </div>
   </div>
 </section>
@@ -801,13 +881,10 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   // (Whop's checkout embed only reports loading/ready/disabled, and "ready" fires
   // for anyone who scrolls to the pricing section, whether they intend to buy or not.
   // Firing on that passive event pollutes the InitiateCheckout signal Meta optimizes toward.)
-  var mainInitiateFired = false;
-  var recoveryInitiateFired = false;
-
   document.querySelectorAll('a[href="#pricing"]').forEach(function(link){
     link.addEventListener('click', function(){
-      if(!mainInitiateFired){
-        mainInitiateFired = true;
+      if(!window.__mainInitiateFired){
+        window.__mainInitiateFired = true;
         if(window.fbq){ fbq('track', 'InitiateCheckout', { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' }); }
         if(window.whop){ whop.track('add_to_cart', { value: 37.00, currency: 'USD' }); }
       }
@@ -842,7 +919,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   setTimeout(function(){
     var l = document.getElementById('loading-main');
     if(l && l.style.display !== 'none'){
-      l.innerHTML = 'Having trouble loading? Your browser or an ad blocker may be blocking the payment form — use the link below.';
+      l.innerHTML = 'Still loading. If the form does not appear, use the direct checkout link below — same price, same guarantee.';
     }
   }, 6000);
 
@@ -857,6 +934,119 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   window.onRecoveryComplete = function(planId, receiptId){
     window.location.href = 'https://neurophase4.com/thank-you?status=success&receipt=' + receiptId + '&value=4.98&currency=USD&content_name=Recovery%20Module';
   };
+
+  // --- Capture: convert a leaving visitor into a reachable one -------------
+  // Set this to your list provider's endpoint (it must accept a JSON POST and
+  // deliver demo.mp3). While it is empty the whole section stays hidden.
+  var CAPTURE_ENDPOINT = '';
+
+  (function(){
+    var section = document.getElementById('capture');
+    var form    = document.getElementById('capture-form');
+    if(!section || !form || !CAPTURE_ENDPOINT) return;
+    section.hidden = false;
+
+    var input = document.getElementById('capture-email');
+    var btn   = document.getElementById('capture-submit');
+    var done  = document.getElementById('capture-done');
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var email = (input.value || '').trim();
+      if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ input.focus(); return; }
+      btn.disabled = true;
+      btn.textContent = 'Sending…';
+
+      fetch(CAPTURE_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email, source: 'neurophase4-sample' })
+      }).then(function(r){
+        if(!r.ok) throw new Error('capture failed: ' + r.status);
+        form.hidden = true;
+        done.hidden = false;
+        // A Lead fires often enough for Meta to actually learn from it — unlike
+        // Purchase, which this account has too few of to leave the learning phase.
+        if(window.fbq){ fbq('track', 'Lead', { content_name: '90-sec sample' }); }
+        if(window.whop){ whop.track('custom', { name: 'sample_email_capture' }); }
+      }).catch(function(){
+        btn.disabled = false;
+        btn.textContent = 'Try again';
+      });
+    });
+  })();
+
+  // --- Mid-funnel signals: build audiences worth retargeting ---------------
+  // Without these the only pools available are "everyone who loaded the page"
+  // and "bought", and there is nothing usable in between.
+  (function(){
+    var mech = document.querySelector('.mech-grid');
+    if(mech && 'IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting && !window.__viewContentFired){
+            window.__viewContentFired = true;
+            if(window.fbq){ fbq('track', 'ViewContent', { content_name: 'Mechanism' }); }
+            io.disconnect();
+          }
+        });
+      }, { threshold: 0.5 });
+      io.observe(mech);
+    }
+
+    var depthFired = false;
+    window.addEventListener('scroll', function(){
+      if(depthFired) return;
+      var h = document.documentElement;
+      var pct = (h.scrollTop + window.innerHeight) / h.scrollHeight;
+      if(pct >= 0.75){
+        depthFired = true;
+        if(window.fbq){ fbq('trackCustom', 'ReadDeep'); }
+      }
+    }, { passive: true });
+  })();
+
+  // --- Attribution bridge for the standalone Whop checkout -----------------
+  // In the Instagram/Facebook in-app browser the embed is hidden (see the
+  // .iab-detected rules), so the buyer leaves for whop.com and onMainComplete
+  // never runs — /thank-you is never reached and Purchase never fires. Since
+  // essentially all paid traffic lands in that browser, no ad-driven sale has
+  // ever reached the pixel. The completion itself can only be reported
+  // server-side (Whop -> Meta Conversions API); what we can still do here is:
+  //   1. send InitiateCheckout as the last client-side signal before they go, and
+  //   2. forward Meta's click/browser ids so the server-side Purchase can be
+  //      matched back to the ad that caused it.
+  (function(){
+    function cookie(name){
+      var m = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+      return m ? m.pop() : '';
+    }
+    var pageParams = new URLSearchParams(window.location.search);
+    var carry = ['fbclid','utm_source','utm_medium','utm_campaign','utm_content','utm_term'];
+
+    document.querySelectorAll('a[href*="whop.com/checkout/"]').forEach(function(link){
+      var isRecovery = link.href.indexOf('plan_jJ924AiHKX8C6') !== -1;
+      var url = new URL(link.href);
+      carry.forEach(function(k){
+        var v = pageParams.get(k);
+        if(v) url.searchParams.set(k, v);
+      });
+      if(cookie('_fbp')) url.searchParams.set('fbp', cookie('_fbp'));
+      if(cookie('_fbc')) url.searchParams.set('fbc', cookie('_fbc'));
+      link.href = url.toString();
+
+      link.addEventListener('click', function(){
+        var flag = isRecovery ? '__recoveryInitiateFired' : '__mainInitiateFired';
+        if(window[flag]) return;
+        window[flag] = true;
+        if(window.fbq){
+          fbq('track', 'InitiateCheckout', isRecovery
+            ? { value: 4.98, currency: 'USD', content_name: 'Recovery Module' }
+            : { value: 37.00, currency: 'USD', content_name: 'Focus Protocol' });
+        }
+      });
+    });
+  })();
 </script>
 
 </body>
