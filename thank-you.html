@@ -14,20 +14,35 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '1548230000000834');
 fbq('track', 'PageView');
 
-// Fire Purchase here — the single source of truth for both the embedded
-// checkout AND the standalone Whop checkout link (used for Instagram/Facebook
-// in-app browsers). Reads value/currency/content_name from the URL so this
-// one page handles both the Core Protocol and Recovery Module.
+// Fire Purchase here. The embedded checkout reaches this page via
+// onMainComplete, which supplies status/value/currency/content_name. The
+// standalone Whop checkout (used by the Instagram/Facebook in-app browser,
+// i.e. effectively all paid traffic) only reaches this page once a
+// post-purchase redirect is configured on the plan in the Whop dashboard —
+// and Whop appends its own receipt parameter rather than ours, so accept
+// either shape and fall back to the plan's list price.
+//
+// eventID is the Whop receipt id so this browser event deduplicates against
+// the server-side Purchase sent by Whop's Meta Conversions API integration.
 (function(){
   var params = new URLSearchParams(window.location.search);
-  if(params.get('status') === 'success'){
-    var value = parseFloat(params.get('value'));
-    var currency = params.get('currency') || 'USD';
-    var contentName = params.get('content_name') || 'Neurophase 4';
-    if(!isNaN(value)){
-      fbq('track', 'Purchase', { value: value, currency: currency, content_name: contentName });
-    }
+  var receipt = params.get('receipt') || params.get('receipt_id') ||
+                params.get('session_id') || params.get('id') || '';
+  var isSuccess = params.get('status') === 'success' || !!receipt;
+  if(!isSuccess) return;
+
+  var contentName = params.get('content_name') || 'Focus Protocol';
+  var value = parseFloat(params.get('value'));
+  if(isNaN(value)){
+    value = /recovery/i.test(contentName) ? 4.98 : 37.00;
   }
+
+  var payload = {
+    value: value,
+    currency: params.get('currency') || 'USD',
+    content_name: contentName
+  };
+  fbq('track', 'Purchase', payload, receipt ? { eventID: receipt } : undefined);
 })();
 </script>
 <noscript><img height="1" width="1" style="display:none"
