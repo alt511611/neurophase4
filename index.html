@@ -189,6 +189,17 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   .pricing{background:var(--bg-alt);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
   .price-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;margin-top:40px;align-items:start;}
   @media(max-width:960px){.price-grid{grid-template-columns:1fr; max-width:640px; margin: 40px auto 0;}}
+  /* The CTA jump must clear the sticky header. */
+  .buy-zone{scroll-margin-top:78px;}
+  /* Stacked on mobile the two-column grid put a 238px guarantee block above the
+     buy card, pushing the button off-screen for anyone scrolling naturally. */
+  @media(max-width:960px){
+    .price-grid > .price-card.main{order:1;}
+    .price-grid > .aggressive-guarantee{order:2;}
+  }
+  /* html{scroll-behavior:smooth} animates a ~5,000px jump on phones; it reads as
+     a broken button. Instant where the distance is largest. */
+  @media(max-width:720px){html{scroll-behavior:auto;}}
   
   .price-card{
     background:var(--bg-card);border:1px solid var(--line);border-radius:8px;padding:32px;
@@ -500,7 +511,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 <header>
   <nav>
     <div class="logo">NEUROPHASE<span>4</span></div>
-    <a href="#pricing" class="nav-cta">GET THE PROTOCOL</a>
+    <a href="#buy" class="nav-cta">GET THE PROTOCOL</a>
   </nav>
 </header>
 
@@ -514,7 +525,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
       mechanisms to guide your mind into a sustainable focus state — <strong>no stimulants, no subscription.</strong>
     </p>
     <div class="cta-row">
-      <a href="#pricing" class="btn-primary">
+      <a href="#buy" class="btn-primary">
         Get The Protocol — $37
       </a>
       <a href="#demo" class="btn-ghost">▶ Listen to the 90-sec sample</a>
@@ -602,7 +613,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
       <div class="meta" style="margin-top:14px;">The full 6-minute loop is included with purchase · works best with stereo headphones</div>
       <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
         <span style="color:var(--muted);font-size:14.5px;">Liked what you heard? The full 6-minute version is one click away.</span>
-        <a href="#pricing" style="font-family:'Space Grotesk';font-weight:600;font-size:14.5px;color:var(--accent);white-space:nowrap;">Get the full version →</a>
+        <a href="#buy" style="font-family:'Space Grotesk';font-weight:600;font-size:14.5px;color:var(--accent);white-space:nowrap;">Get the full version →</a>
       </div>
     </div>
   </div>
@@ -679,6 +690,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           </ul>
         </div>
 
+        <div class="buy-zone" id="buy">
         <div class="checkout-embed">
           <div class="checkout-loading" id="loading-main"><span class="spinner"></span> Loading secure payment form…</div>
           <div
@@ -703,6 +715,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
           </ul>
           <a class="iab-go" href="https://whop.com/checkout/plan_kjPN9mxV6f7z4/?session=ch_0f45rSKXDxl0iMt">Complete Secure Checkout — $37 →</a>
           <span class="iab-foot">One-time $37 · no subscription · 30-day full refund, no questions asked</span>
+        </div>
         </div>
 
         <div class="guarantee-inline">
@@ -835,7 +848,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   <div class="wrap">
     <div class="eyebrow" style="justify-content:center;">A Tool. Not A Promise.</div>
     <h2>Either it works within 30 days, or you pay nothing.</h2>
-    <a href="#pricing" class="btn-primary">Get The Protocol — $37</a>
+    <a href="#buy" class="btn-primary">Get The Protocol — $37</a>
     <div class="trust-line">
       <span>Instant delivery</span>
       <span>·</span>
@@ -862,7 +875,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
 
 <div class="sticky-cta">
   <div class="mono" style="font-size:13px;color:var(--muted);">30-day refund guarantee</div>
-  <a href="#pricing" class="btn-primary">Get It — $37</a>
+  <a href="#buy" class="btn-primary">Get It — $37</a>
 </div>
 
 <script>
@@ -881,7 +894,7 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
   // (Whop's checkout embed only reports loading/ready/disabled, and "ready" fires
   // for anyone who scrolls to the pricing section, whether they intend to buy or not.
   // Firing on that passive event pollutes the InitiateCheckout signal Meta optimizes toward.)
-  document.querySelectorAll('a[href="#pricing"]').forEach(function(link){
+  document.querySelectorAll('a[href="#buy"]').forEach(function(link){
     link.addEventListener('click', function(){
       if(!window.__mainInitiateFired){
         window.__mainInitiateFired = true;
@@ -1004,6 +1017,22 @@ src="https://www.facebook.com/tr?id=1548230000000834&ev=PageView&noscript=1"
         if(window.fbq){ fbq('trackCustom', 'ReadDeep'); }
       }
     }, { passive: true });
+  })();
+
+  // --- In-app browsers: one click to the payment form ----------------------
+  // Instagram/Facebook/Telegram hide the embedded form (see .iab-detected), so
+  // these visitors buy through the standalone Whop link. Sending them to #buy
+  // still cost a second click plus ~2 screens of scrolling, and the pixel shows
+  // what that cost: 215 CTA clicks over 9 days produced 2 AddPaymentInfo events.
+  // Point every CTA straight at checkout. Runs before the attribution bridge so
+  // the rewritten links pick up UTMs and the InitiateCheckout handler too.
+  (function(){
+    if(!document.body.classList.contains('iab-detected')) return;
+    var target = document.querySelector('.price-card.main .iab-cta a.iab-go');
+    if(!target || !target.href) return;
+    document.querySelectorAll('a[href="#buy"]').forEach(function(link){
+      link.setAttribute('href', target.href);
+    });
   })();
 
   // --- Attribution bridge for the standalone Whop checkout -----------------
